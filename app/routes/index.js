@@ -2,6 +2,11 @@
 
 const routers = require('express').Router();
 
+const celebrityRoutes = require('./celebrities');
+
+// Routers list
+routers.use('/celebrities', celebrityRoutes);
+
 // Helthcheck router
 routers.get('/', (req, res) => {
   res.status(200)
