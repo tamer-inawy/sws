@@ -8,7 +8,7 @@ const celebrityRoutes = require('./celebrities');
 routers.use('/celebrities', celebrityRoutes);
 
 // Helthcheck router
-routers.get('/', (req, res) => {
+routers.get('/healthcheck', (req, res) => {
   res.status(200)
     .json({
       status: 'success',
