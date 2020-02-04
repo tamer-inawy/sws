@@ -9,5 +9,7 @@ module.exports = {
   celebrities: {
     uploadsPath: 'public/celebrities/uploads/',
     mediaPath: 'public/celebrities/',
-  }
+  },
+
+  allowedVideoTypes: ['image/jpeg', 'image/png']
 };

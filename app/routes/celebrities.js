@@ -1,18 +1,15 @@
 'user strict';
 
 const express = require('express');
-const mongoose = require('mongoose');
 
-const Celebrity = require('../models/celebrity');
-const celebritiesController = require('../controllers/celebrities');
-const fileUploadHelper = require('../helpers/fileUploadHelper');
 const config = require(`../config/${process.env.ENV}`);
+const fileUploadHelper = require('../helpers/fileUploadHelper');
+const celebritiesController = require('../controllers/celebrities');
 
 const router = express.Router();
 
 router.get('/', celebritiesController.getAllCelebrities);
-router.post('/', fileUploadHelper.getSingleUploader('video', config.celebrities.uploadsPath, ['image/jpeg', 'image/png']), celebritiesController.createCelebrity);
-
+router.post('/', fileUploadHelper.getSingleUploader('video', config.celebrities.uploadsPath, config.allowedVideoTypes), celebritiesController.createCelebrity);
 router.get('/:celebrityId', celebritiesController.getCelebrity);
 
 router.patch('/:celebrityId', (req, res, next) => {

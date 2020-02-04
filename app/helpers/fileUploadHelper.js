@@ -49,15 +49,15 @@ const createDir = dir => {
 
 
 const fileUploadHelper = {
-  getSingleUploader: (field, path, mimetypes) => {
+  getSingleUploader(field, path, mimetypes) {
     createDir(path);
     const uploader = getUploader(path, mimetypes);
     return uploader.single(field);
   },
 
-  moveFile: (file, dir2) => {
+  moveFile(file, dir2) {
     const dest = generateFilePath(file, dir2);
-    
+
     fs.rename(file, dest, (err) => {
       if (err) throw err;
       else console.log('Successfully moved!');

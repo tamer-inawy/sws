@@ -1,8 +1,9 @@
 'use strict';
 
-const Celebrity = require('../models/celebrity');
+const config = require(`../config/${process.env.ENV}`);
 const fileUploadHelper = require('../helpers/fileUploadHelper');
-const config = require('../config/develop');
+const dataFormatHelper = require('../helpers/dataFormatHelper');
+const Celebrity = require('../models/celebrity');
 
 const celebritiesController = {
 
@@ -12,30 +13,20 @@ const celebritiesController = {
     // TODO: handle validation 
     let valid = true;
     if (!valid) {
-      res.status(400).send({
-        status: 'failed',
-        error: {
-          message: 'Please provide a valid data!'
-        }
-      });
+      res.status(400).send(dataFormatHelper.errorFormat('Please provide a valid data!'));
 
     }
     else {
-newCelebrity.video = req.file.filename;
+      newCelebrity.video = req.file.filename;
       Celebrity.createCelebrity(newCelebrity, (err, celebrity) => {
         if (err) {
           console.log(err);
           res.status(500);
-          return res.json({
-            status: 'failed',
-            error: {
-              message: 'Error: Can\'t retrieve the data!'
-            }
-          });
+          return res.json(dataFormatHelper.errorFormat('Error: Can\'t retrieve the data!'));
         }
 
         fileUploadHelper.moveFile(req.file.path, `${config.celebrities.mediaPath}/${celebrity.id}/`);
-        res.json({ status: 'success', data: celebrity });
+        res.json(dataFormatHelper.successFormat(celebrity));
       });
     }
   },
@@ -45,15 +36,10 @@ newCelebrity.video = req.file.filename;
       if (err) {
         console.log(err);
         res.status(500);
-        return res.json({
-          status: 'failed',
-          error: {
-            message: 'Error: Can\'t retrieve the data!'
-          }
-        });
+        return res.json(dataFormatHelper.errorFormat('Error: Can\'t retrieve the data!'));
       }
 
-      res.json({ status: 'success', data: celebrities });
+      res.json(dataFormatHelper.successFormat(celebrities));
     });
   },
 
@@ -63,12 +49,7 @@ newCelebrity.video = req.file.filename;
     // TODO: handle validation 
     let valid = true;
     if (!valid) {
-      res.status(400).send({
-        status: 'failed',
-        error: {
-          message: 'Please provide a valid data!'
-        }
-      });
+      res.status(400).send(dataFormatHelper.errorFormat('Please provide a valid data!'));
 
     }
     else {
@@ -77,15 +58,10 @@ newCelebrity.video = req.file.filename;
         if (err || !celebrity) {
           console.log(err);
           res.status(500);
-          return res.json({
-            status: 'failed',
-            error: {
-              message: 'Error: Can\'t retrieve the data!'
-            }
-          });
+          return res.json(dataFormatHelper.errorFormat('Error: Can\'t retrieve the data!'));
         }
 
-        res.json({ status: 'success', data: celebrity });
+        res.json(dataFormatHelper.successFormat(celebrity));
       });
     }
   }
