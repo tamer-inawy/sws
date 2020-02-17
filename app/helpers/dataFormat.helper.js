@@ -3,10 +3,9 @@
 const bcrypt = require("bcrypt");
 
 const formater = {
-  successFormat: data => ({status: 'success', data: data}),
-  errorFormat: err => ({status: 'failed', error: err.message}),
-  // errorFormat: err => ({status: 'failed', error: {message: err.message}}),
-  passwordHash: pass => bcrypt.hashSync(pass, 10),
+  successFormat: data => ({ status: 'success', data: data }),
+  errorFormat: err => ({ status: 'failed', error: process.env.ENV === 'develop' ? err : err.message }),
+  passwordHash: (pass, saltRound) => bcrypt.hashSync(pass, saltRound),
 };
 
 module.exports = formater;

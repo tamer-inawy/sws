@@ -11,7 +11,7 @@ const Celebrity = require('../models/celebrity.model');
 const celebritiesController = {
 
   createCelebrity: (req, res) => {
-    req.body.password = dataFormatHelper.passwordHash(req.body.password);
+    req.body.password = dataFormatHelper.passwordHash(req.body.password, config.saltRound);
     const newCelebrity = new Celebrity(req.body);
     if (req.file)
       newCelebrity.video = req.file.filename;
@@ -101,7 +101,7 @@ const celebritiesController = {
       if (req.file)
         updatedCelebrity.video = req.file.filename;
       if (req.body.password)
-        updatedCelebrity.password = dataFormatHelper.passwordHash(req.body.password);
+        updatedCelebrity.password = dataFormatHelper.passwordHash(req.body.password, config.saltRound);
 
       // Prevent email update
       delete updatedCelebrity.email;
