@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 
-const getUploader = (path, mimetypes) => {
+const getUploader = (path, mimetypes, fileSize) => {
   const storage = multer.diskStorage({
     destination: function (req, file, callBack) {
       callBack(null, path);
@@ -27,7 +27,7 @@ const getUploader = (path, mimetypes) => {
   const uploader = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 5
+      fileSize: fileSize
     },
     fileFilter: fileFilter
   });
@@ -49,9 +49,9 @@ const createDir = dir => {
 
 
 const fileUploadHelper = {
-  getSingleUploader(field, path, mimetypes) {
+  getSingleUploader(field, path, mimetypes, fileSize) {
     createDir(path);
-    const uploader = getUploader(path, mimetypes);
+    const uploader = getUploader(path, mimetypes, fileSize);
     return uploader.single(field);
   },
 
@@ -60,9 +60,17 @@ const fileUploadHelper = {
 
     fs.rename(file, dest, (err) => {
       if (err) throw err;
-      else console.log('Successfully moved!');
+      else console.log(`${file} successfully moved to ${dest}!`);
     });
-  }
+  },
+
+  deleteFile(filePath) {
+    fs.unlink(filePath, err => {
+      if (err)
+        throw err
+      console.log(`${filePath} has been deleted!`);
+    });
+  },
 
 };
 

@@ -2,7 +2,7 @@
 
 const routers = require('express').Router();
 
-const celebrityRoutes = require('./celebrities');
+const celebrityRoutes = require('./celebrities.route');
 
 // Routers list
 routers.use('/celebrities', celebrityRoutes);
