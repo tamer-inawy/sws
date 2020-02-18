@@ -53,7 +53,6 @@ const schema = {
 
 // Celebrity object constructor
 const Celebrity = function (celebrity) {
-  console.log(celebrity);
   for (const field of schema.fields) {
     if (celebrity[field.name])
       this[field.name] = celebrity[field.name];
