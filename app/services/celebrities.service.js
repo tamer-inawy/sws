@@ -1,8 +1,6 @@
 const config = require(`../config/${process.env.ENV}.config`);
 const Celebrity = require('../models/celebrity.model');
-const { dataFormatHelper } = require('../helpers');
-const { validationHelper } = require('../helpers');
-const { fileUploadHelper } = require('../helpers');
+const { dataFormatHelper, validationHelper, fileUploadHelper } = require('../helpers');
 
 const celebritiesService = {
   createCelebrity(data, filePath) {
