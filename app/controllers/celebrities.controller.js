@@ -20,19 +20,18 @@ const celebritiesController = {
     if (!validate.isValid) {
       if (req.file)
         celebritiesService.clearMedia(req.file.path);
-      const err = new Error();
-      err.message = 'Please provide a valid data!';
+      const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
-      return res.status(400).send(dataFormatHelper.errorFormat(err));
+      next(err);
     }
 
     celebritiesService.createCelebrity(req.body, filePath)
       .then((celebrity) => {
-        res.json(dataFormatHelper.successFormat(celebrity));
+        res.locals.data = celebrity;
+        next();;
       })
       .catch(err => {
-        console.log(err);
         if (err.errno === 1062) {
           err.message = 'The email is already in use!';
           err.status = 409;
@@ -40,19 +39,19 @@ const celebritiesController = {
           err.message = err.message || 'Error: Can\'t retrieve the data!';
         }
 
-        return res.status(err.status || 400).json(dataFormatHelper.errorFormat(err));
+        next(err);
       });
   },
 
   getAllCelebrities: (req, res, next) => {
     celebritiesService.getAllCelebrities()
       .then((celebrities) => {
-        res.json(dataFormatHelper.successFormat(celebrities));
+        res.locals.data = celebrities;
+        next();
       })
       .catch((err) => {
-        console.log(err);
         err.message = err.message || 'Error: Can\'t retrieve the data!';
-        return res.status(err.status || 400).json(dataFormatHelper.errorFormat(err));
+        next(err);
       });
   },
 
@@ -61,25 +60,23 @@ const celebritiesController = {
 
     // handle validation
     if (!celebrityId) {
-      const err = new Error();
-      err.message = 'Please provide a valid data!';
-      throw err;
+      const err = new Error('Please provide a valid data!');
+      next(err);
     }
 
     celebritiesService.getCelebrity(celebrityId)
       .then((celebrity) => {
         if (!celebrity) {
-          const err = new Error();
-          err.message = 'Error: Can\'t retrieve the data!';
+          const err = new Error('Error: Can\'t retrieve the data!');
           throw err;
         }
 
-        res.json(dataFormatHelper.successFormat(celebrity));
+        res.locals.data = celebrity;
+        next();;
       })
       .catch(err => {
-        console.log(err);
         err.message = err.message || 'Error: Can\'t retrieve the data!';
-        return res.status(err.status || 400).json(dataFormatHelper.errorFormat(err));
+        next(err);
       });
 
   },
@@ -92,8 +89,7 @@ const celebritiesController = {
     if (!valid) {
       if (req.file)
         celebritiesService.clearMedia(req.file.path);
-      const err = new Error();
-      err.message = 'Please provide a valid data!';
+      const err = new Error('Please provide a valid data!');
       throw err;
     }
 
@@ -105,7 +101,8 @@ const celebritiesController = {
 
     celebritiesService.updateCelebrity(celebrityId, req.body, filePath)
       .then((celebrity) => {
-        res.json(dataFormatHelper.successFormat(celebrity));
+        res.locals.data = celebrity;
+        next();;
       })
       .catch(err => {
         console.log(err);
@@ -114,7 +111,7 @@ const celebritiesController = {
         } else {
           err.message = err.message || 'Error: Can\'t retrieve the data!';
         }
-        return res.status(err.status || 400).json(dataFormatHelper.errorFormat(err));
+        next(err);
       });
   },
 
@@ -126,9 +123,8 @@ const celebritiesController = {
     celebritiesService.validateCelebrityCredintials(email, password)
       .then((results) => {
         if (!results) {
-          const err = new Error();
+          const err = new Error('Invalid email or password!');
           err.status = 401;
-          err.message = 'Invalid email or password!';
           throw err;
         }
 
@@ -140,12 +136,13 @@ const celebritiesController = {
         // TODO: move the token creation to auth service
         data.token = jwt.sign(data, config.jwt.secrit, { expiresIn: config.jwt.expiration });
 
-        res.json(dataFormatHelper.successFormat(data));
+        res.locals.data = data;
+        next();;
       })
       .catch(err => {
         console.log(err);
         err.message = err.message || 'Error: Can\'t retrieve the data!';
-        return res.status(err.status || 400).json(dataFormatHelper.errorFormat(err));
+        next(err);
       });
   }
 

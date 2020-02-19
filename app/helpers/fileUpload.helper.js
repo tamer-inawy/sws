@@ -56,6 +56,9 @@ const fileUploadHelper = {
   },
 
   moveFile(file, dir2) {
+    if (!fs.existsSync(file))
+      return false;
+
     const dest = generateFilePath(file, dir2);
 
     fs.rename(file, dest, (err) => {
@@ -65,6 +68,8 @@ const fileUploadHelper = {
   },
 
   deleteFile(filePath) {
+    if (!fs.existsSync(filePath))
+      return false;
     fs.unlink(filePath, err => {
       if (err)
         throw err
