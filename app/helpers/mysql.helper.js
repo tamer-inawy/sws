@@ -58,7 +58,9 @@ const mysqlHelper = {
       data.id = id;
 
       // prepare the params
-      const fields = Object.keys(data).map(key => `\`${key}\``).join(' = ?, ') + ' = ? ';
+      const fields = Object.keys(data)
+        .map(key => `\`${key}\``)
+        .join(' = ?, ') + ' = ? ';
       const params = Object.values(data);
       params.push(id);
 
