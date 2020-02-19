@@ -3,7 +3,7 @@
 const express = require('express');
 
 const config = require(`../config/${process.env.ENV}.config`);
-const fileUploadHelper = require('../helpers/fileUpload.helper');
+const { fileUploadHelper } = require('../helpers');
 const celebritiesController = require('../controllers/celebrities.controller');
 const auth = require('../middlewares/auth.middleware');
 

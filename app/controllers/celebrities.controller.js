@@ -3,12 +3,12 @@
 const jwt = require('jsonwebtoken');
 
 const config = require(`../config/${process.env.ENV}.config`);
-const dataFormatHelper = require('../helpers/dataFormat.helper');
+const { dataFormatHelper } = require('../helpers');
 const celebritiesService = require('../services/celebrities.service');
 
 const celebritiesController = {
 
-  createCelebrity: (req, res) => {
+  createCelebrity: (req, res, next) => {
     let filePath = false;
     if (req.file) {
       req.body.video = req.file.filename;
@@ -44,7 +44,7 @@ const celebritiesController = {
       });
   },
 
-  getAllCelebrities: (req, res) => {
+  getAllCelebrities: (req, res, next) => {
     celebritiesService.getAllCelebrities()
       .then((celebrities) => {
         res.json(dataFormatHelper.successFormat(celebrities));
@@ -56,7 +56,7 @@ const celebritiesController = {
       });
   },
 
-  getCelebrity: (req, res) => {
+  getCelebrity: (req, res, next) => {
     const celebrityId = req.params.celebrityId;
 
     // handle validation
@@ -84,7 +84,7 @@ const celebritiesController = {
 
   },
 
-  updateCelebrity(req, res) {
+  updateCelebrity(req, res, next) {
     const celebrityId = req.params.celebrityId;
 
     // TODO: handle validation 
@@ -118,7 +118,7 @@ const celebritiesController = {
       });
   },
 
-  login(req, res) {
+  login(req, res, next) {
     const password = req.body.password;
     const email = req.body.email;
 

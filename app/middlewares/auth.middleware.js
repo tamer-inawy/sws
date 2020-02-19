@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken');
 
 const config = require(`../config/${process.env.ENV}.config`);
-const dataFormatHelper = require('../helpers/dataFormat.helper');
+const { dataFormatHelper } = require('../helpers');
 
 const auth = (req, res, next) => {
   try {

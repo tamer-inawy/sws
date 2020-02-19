@@ -1,6 +1,6 @@
 'user strict';
 
-const mySqlHelper = require('../helpers/mysql.helper');
+const { ormHelper } = require('../helpers');
 
 // Set database schema
 const schema = {
@@ -63,23 +63,23 @@ const Celebrity = function (celebrity) {
 Celebrity.getSchema = () => [...schema.fields];
 
 Celebrity.createCelebrity = (newCelebrity) => {
-  return mySqlHelper.create(schema.table, newCelebrity);
+  return ormHelper.create(schema.table, newCelebrity);
 };
 
 Celebrity.getAllCelebrities = () => {
-  return mySqlHelper.getAll(schema.table);
+  return ormHelper.getAll(schema.table);
 };
 
 Celebrity.getCelebrity = (celebrityId) => {
-  return mySqlHelper.getOne(schema.table, celebrityId);
+  return ormHelper.getOne(schema.table, celebrityId);
 };
 
 Celebrity.updateCelebrity = (celebrityId, data) => {
-  return mySqlHelper.updateOne(schema.table, celebrityId, data);
+  return ormHelper.updateOne(schema.table, celebrityId, data);
 }
 
 Celebrity.findCelebrityByEmail = (email) => {
-  return mySqlHelper.findOne(schema.table, {email: email});
+  return ormHelper.findOne(schema.table, {email: email});
 };
 
 module.exports = Celebrity;
