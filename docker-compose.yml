@@ -10,7 +10,7 @@ services:
       - MYSQL_RANDOM_ROOT_PASSWORD=no
       - MYSQL_DATABASE=sws
     volumes:
-      - mariadb_data:/sws
+      - mariadb_data:/bitnami
     ports:
       - '3306:3306'
 
@@ -22,7 +22,7 @@ services:
       - '80:80'
       - '443:443'
     volumes:
-      - phpmyadmin_data:/sws
+      - phpmyadmin_data:/bitnami
 
   api:
     build: .

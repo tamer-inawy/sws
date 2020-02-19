@@ -3,24 +3,23 @@
 const jwt = require('jsonwebtoken');
 
 const config = require(`../config/${process.env.ENV}.config`);
-const fileUploadHelper = require('../helpers/fileUpload.helper');
 const dataFormatHelper = require('../helpers/dataFormat.helper');
-const validationHelper = require('../helpers/validation.helper');
-const Celebrity = require('../models/celebrity.model');
+const celebritiesService = require('../services/celebrities.service');
 
 const celebritiesController = {
 
   createCelebrity: (req, res) => {
-    req.body.password = dataFormatHelper.passwordHash(req.body.password, config.saltRound);
-    const newCelebrity = new Celebrity(req.body);
-    if (req.file)
-      newCelebrity.video = req.file.filename;
+    let filePath = false;
+    if (req.file) {
+      req.body.video = req.file.filename;
+      filePath = req.file.path;
+    }
 
-    // TODO: handle validation 
-    const validate = validationHelper.validate(Celebrity.getSchema(), newCelebrity);
+    // handle validation 
+    const validate = celebritiesService.validateCelebrity(req.body);
     if (!validate.isValid) {
       if (req.file)
-        fileUploadHelper.deleteFile(req.file.path);
+        celebritiesService.clearMedia(req.file.path);
       const err = new Error();
       err.message = 'Please provide a valid data!';
       err.field = validate.field;
@@ -28,144 +27,126 @@ const celebritiesController = {
       return res.status(400).send(dataFormatHelper.errorFormat(err));
     }
 
-    Celebrity.createCelebrity(newCelebrity, (err, celebrity) => {
-      if (err) {
-        if (req.file)
-          fileUploadHelper.deleteFile(req.file.path);
+    celebritiesService.createCelebrity(req.body, filePath)
+      .then((celebrity) => {
+        res.json(dataFormatHelper.successFormat(celebrity));
+      })
+      .catch(err => {
         console.log(err);
-        res.status(500);
-        err.message = 'Error: Can\'t retrieve the data!';
-        return res.json(dataFormatHelper.errorFormat(err));
-      }
+        if (err.errno === 1062) {
+          err.message = 'The email is already in use!';
+          err.status = 409;
+        } else {
+          err.message = err.message || 'Error: Can\'t retrieve the data!';
+        }
 
-      fileUploadHelper.moveFile(req.file.path, `${config.celebrities.mediaPath}/${celebrity.id}/`);
-      res.json(dataFormatHelper.successFormat(celebrity));
-    });
+        return res.status(err.status || 400).json(dataFormatHelper.errorFormat(err));
+      });
   },
 
   getAllCelebrities: (req, res) => {
-    Celebrity.getAllCelebrities((err, celebrities) => {
-      if (err) {
+    celebritiesService.getAllCelebrities()
+      .then((celebrities) => {
+        res.json(dataFormatHelper.successFormat(celebrities));
+      })
+      .catch((err) => {
         console.log(err);
-        res.status(500);
-        err.message = 'Error: Can\'t retrieve the data!';
-        return res.json(dataFormatHelper.errorFormat(err));
-      }
-
-      res.json(dataFormatHelper.successFormat(celebrities));
-    });
+        err.message = err.message || 'Error: Can\'t retrieve the data!';
+        return res.status(err.status || 400).json(dataFormatHelper.errorFormat(err));
+      });
   },
 
   getCelebrity: (req, res) => {
     const celebrityId = req.params.celebrityId;
 
-    // TODO: handle validation 
-    let valid = true;
-    if (!valid) {
-      const err = err = new Error();;
+    // handle validation
+    if (!celebrityId) {
+      const err = new Error();
       err.message = 'Please provide a valid data!';
-      res.status(400).send(dataFormatHelper.errorFormat(err));
-
+      throw err;
     }
-    else {
 
-      Celebrity.getCelebrity(celebrityId, (err, celebrity) => {
-        if (err || !celebrity) {
-          res.status(500);
-          err = err ? err : new Error();
+    celebritiesService.getCelebrity(celebrityId)
+      .then((celebrity) => {
+        if (!celebrity) {
+          const err = new Error();
           err.message = 'Error: Can\'t retrieve the data!';
-          console.log(err);
-          return res.json(dataFormatHelper.errorFormat(err));
+          throw err;
         }
 
         res.json(dataFormatHelper.successFormat(celebrity));
+      })
+      .catch(err => {
+        console.log(err);
+        err.message = err.message || 'Error: Can\'t retrieve the data!';
+        return res.status(err.status || 400).json(dataFormatHelper.errorFormat(err));
       });
-    }
+
   },
 
   updateCelebrity(req, res) {
-    const updatedCelebrity = new Celebrity(req.body);
     const celebrityId = req.params.celebrityId;
 
     // TODO: handle validation 
     let valid = true;
     if (!valid) {
       if (req.file)
-        fileUploadHelper.deleteFile(req.file.path);
-      const err = err = new Error();;
+        celebritiesService.clearMedia(req.file.path);
+      const err = new Error();
       err.message = 'Please provide a valid data!';
-      res.status(400).send(dataFormatHelper.errorFormat(err));
-
+      throw err;
     }
-    else {
-      if (req.file)
-        updatedCelebrity.video = req.file.filename;
-      if (req.body.password)
-        updatedCelebrity.password = dataFormatHelper.passwordHash(req.body.password, config.saltRound);
 
-      // Prevent email update
-      delete updatedCelebrity.email;
+    let filePath = false;
+    if (req.file) {
+      req.body.video = req.file.filename;
+      filePath = req.file.path;
+    }
 
-      Celebrity.updateCelebrity(celebrityId, updatedCelebrity, (err, celebrity) => {
-        if (err) {
-          if (req.file)
-            fileUploadHelper.deleteFile(req.file.path);
-          console.log(err);
-          if (err.errno === 1062) {
-            res.status(400);
-            err.message = 'The email is already in use!';
-          } else {
-            res.status(500);
-            err.message = 'Error: Can\'t retrieve the data!';
-          }
-          return res.json(dataFormatHelper.errorFormat(err));
-        }
-
-        if (req.file)
-          fileUploadHelper.moveFile(req.file.path, `${config.celebrities.mediaPath}/${celebrityId}/`);
+    celebritiesService.updateCelebrity(celebrityId, req.body, filePath)
+      .then((celebrity) => {
         res.json(dataFormatHelper.successFormat(celebrity));
+      })
+      .catch(err => {
+        console.log(err);
+        if (err.errno === 1062) {
+          err.message = 'The email is already in use!';
+        } else {
+          err.message = err.message || 'Error: Can\'t retrieve the data!';
+        }
+        return res.status(err.status || 400).json(dataFormatHelper.errorFormat(err));
       });
-    }
   },
 
   login(req, res) {
     const password = req.body.password;
     const email = req.body.email;
 
-    // Validate email
-    Celebrity.findCelebrityByEmail(email, (err, results) => {
-      if (err) {
-        res.status(500);
-        err = err ? err : new Error();
-        err.message = 'Error: Can\'t retrieve the data!';
+    // Validate credentials
+    celebritiesService.validateCelebrityCredintials(email, password)
+      .then((results) => {
+        if (!results) {
+          const err = new Error();
+          err.status = 401;
+          err.message = 'Invalid email or password!';
+          throw err;
+        }
+
+        const data = {
+          id: results.id,
+          name: results.name,
+          email: results.email
+        };
+        // TODO: move the token creation to auth service
+        data.token = jwt.sign(data, config.jwt.secrit, { expiresIn: config.jwt.expiration });
+
+        res.json(dataFormatHelper.successFormat(data));
+      })
+      .catch(err => {
         console.log(err);
-        return res.json(dataFormatHelper.errorFormat(err));
-      }
-
-      if (!results) {
-        res.status(401);
-        err = err ? err : new Error();
-        err.message = 'Invalid email or password!';
-        return res.json(dataFormatHelper.errorFormat(err));
-      }
-
-      // Validate password
-      if (!validationHelper.comparePassword(password, results.password)) {
-        res.status(401);
-        err = err ? err : new Error();
-        err.message = 'Invalid email or password!';
-        return res.json(dataFormatHelper.errorFormat(err));
-      }
-
-      const data = {
-        id: results.id,
-        name: results.name,
-        email: results.email
-      };
-      data.token = jwt.sign(data, config.jwt.secrit, { expiresIn: config.jwt.expiration });
-
-      res.json(dataFormatHelper.successFormat(data));
-    });
+        err.message = err.message || 'Error: Can\'t retrieve the data!';
+        return res.status(err.status || 400).json(dataFormatHelper.errorFormat(err));
+      });
   }
 
 };

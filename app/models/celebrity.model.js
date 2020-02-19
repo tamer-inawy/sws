@@ -37,7 +37,7 @@ const schema = {
       required: true
     },
     {
-      name: 'description',
+      name: 'desc',
       required: true
     },
     {
@@ -62,24 +62,24 @@ const Celebrity = function (celebrity) {
 // Celebrity Methods
 Celebrity.getSchema = () => [...schema.fields];
 
-Celebrity.createCelebrity = (newCelebrity, callBack) => {
-  mySqlHelper.create(schema.table, newCelebrity, callBack);
+Celebrity.createCelebrity = (newCelebrity) => {
+  return mySqlHelper.create(schema.table, newCelebrity);
 };
 
-Celebrity.getAllCelebrities = callBack => {
-  mySqlHelper.getAll(schema.table, callBack);
+Celebrity.getAllCelebrities = () => {
+  return mySqlHelper.getAll(schema.table);
 };
 
-Celebrity.getCelebrity = (celebrityId, callBack) => {
-  mySqlHelper.getOne(schema.table, celebrityId, callBack);
+Celebrity.getCelebrity = (celebrityId) => {
+  return mySqlHelper.getOne(schema.table, celebrityId);
 };
 
-Celebrity.updateCelebrity = (celebrityId, data, callBack) => {
-  mySqlHelper.updateOne(schema.table, celebrityId, data, callBack);
+Celebrity.updateCelebrity = (celebrityId, data) => {
+  return mySqlHelper.updateOne(schema.table, celebrityId, data);
 }
 
-Celebrity.findCelebrityByEmail = (email, callBack) => {
-  mySqlHelper.findOne(schema.table, {email: email}, callBack);
+Celebrity.findCelebrityByEmail = (email) => {
+  return mySqlHelper.findOne(schema.table, {email: email});
 };
 
 module.exports = Celebrity;
