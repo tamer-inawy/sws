@@ -2,8 +2,8 @@
 
 const routers = require('express').Router();
 
-const celebrityRoutes = require('./celebrities.route');
-const { responseMiddleware, errorHandlerMiddleware } = require('../middlewares');
+const celebrityRoutes = require('./modules/celebrities/celebrities.route');
+const { responseMiddleware, errorHandlerMiddleware } = require('./middlewares');
 
 // Routers list
 routers.use('/celebrities', celebrityRoutes, responseMiddleware);

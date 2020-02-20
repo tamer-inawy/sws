@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-
-const config = require(`../config/${process.env.ENV}.config`);
-const Celebrity = require('../models/celebrity.model');
-const { dataFormatHelper, validationHelper, fileUploadHelper } = require('../helpers');
+// Import utilities
+const config = require(`../../config/${process.env.ENV}.config`);
+const { dataFormatHelper, validationHelper, fileUploadHelper } = require('../../helpers');
+// Import model
+const Celebrity = require('./celebrity.model');
 
 const celebritiesService = {
   createCelebrity(data, filePath) {
@@ -33,6 +34,8 @@ const celebritiesService = {
 
   getCelebrity: id => Celebrity.getCelebrity(id)
     .then(results => {
+      if (!results)
+        return false;
       const { password, ...resultsWitoutPassword } = results;
       return resultsWitoutPassword;
     }),

@@ -1,11 +1,10 @@
-'user strict';
-
 const express = require('express');
-
-const config = require(`../config/${process.env.ENV}.config`);
-const { fileUploadHelper } = require('../helpers');
-const celebritiesController = require('../controllers/celebrities.controller');
-const { authMiddleware } = require('../middlewares');
+// Import utilities
+const config = require(`../../config/${process.env.ENV}.config`);
+const { fileUploadHelper } = require('../../helpers');
+const { authMiddleware } = require('../../middlewares');
+// Import controller
+const celebritiesController = require('./celebrities.controller');
 
 const router = express.Router();
 const videoUploaderConfis = [
@@ -18,20 +17,20 @@ const videoUploaderConfis = [
 router.get('/', celebritiesController.getAllCelebrities);
 
 router.post('/',
-  authMiddleware,
+  authMiddleware('Celebrity'),
   fileUploadHelper.getSingleUploader(...videoUploaderConfis),
   celebritiesController.createCelebrity);
 
 router.get('/:celebrityId', celebritiesController.getCelebrity);
 
 router.patch('/:celebrityId',
-  authMiddleware,
+  authMiddleware('Celebrity'),
   fileUploadHelper.getSingleUploader(...videoUploaderConfis),
   celebritiesController.updateCelebrity);
 
 // TODO: implement delete celebrity
 router.delete('/:celebrityId',
-  authMiddleware,
+  authMiddleware('Celebrity'),
   (req, res, next) => {
     res.status(401).json({
       message: 'Celebrities can\'t be deleted!'

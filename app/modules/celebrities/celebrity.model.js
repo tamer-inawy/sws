@@ -1,6 +1,6 @@
 'user strict';
 
-const { ormHelper } = require('../helpers');
+const { ormHelper } = require('../../helpers');
 
 // Set database schema
 const schema = {

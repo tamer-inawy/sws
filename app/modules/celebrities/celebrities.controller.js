@@ -1,6 +1,6 @@
 'use strict';
 
-const celebritiesService = require('../services/celebrities.service');
+const celebritiesService = require('./celebrities.service');
 
 const celebritiesController = {
 
@@ -32,7 +32,7 @@ const celebritiesController = {
           err.message = 'The email is already in use!';
           err.status = 409;
         } else {
-          err.message = err.message || 'Error: Can\'t retrieve the data!';
+          err.message = err.message || 'Can\'t retrieve the data!';
         }
 
         next(err);
@@ -46,7 +46,7 @@ const celebritiesController = {
         next();
       })
       .catch((err) => {
-        err.message = err.message || 'Error: Can\'t retrieve the data!';
+        err.message = err.message || 'Can\'t retrieve the data!';
         next(err);
       });
   },
@@ -63,7 +63,7 @@ const celebritiesController = {
     celebritiesService.getCelebrity(celebrityId)
       .then((celebrity) => {
         if (!celebrity) {
-          const err = new Error('Error: Can\'t retrieve the data!');
+          const err = new Error('Can\'t retrieve the data!');
           throw err;
         }
 
@@ -71,7 +71,7 @@ const celebritiesController = {
         next();;
       })
       .catch(err => {
-        err.message = err.message || 'Error: Can\'t retrieve the data!';
+        err.message = err.message || 'Can\'t retrieve the data!';
         next(err);
       });
 
@@ -112,7 +112,7 @@ const celebritiesController = {
         if (err.errno === 1062) {
           err.message = 'The email is already in use!';
         } else {
-          err.message = err.message || 'Error: Can\'t retrieve the data!';
+          err.message = err.message || 'Can\'t retrieve the data!';
         }
         next(err);
       });
@@ -136,7 +136,7 @@ const celebritiesController = {
       })
       .catch(err => {
         console.log(err);
-        err.message = err.message || 'Error: Can\'t retrieve the data!';
+        err.message = err.message || 'Can\'t retrieve the data!';
         next(err);
       });
   }
