@@ -2,7 +2,7 @@
 
 const mysql = require('mysql');
 
-const config = require(`../config/${process.env.ENV}.config`);
+const config = require(`../config/${process.env.NODE_ENV}.config`);
 
 //local mysql db connection
 const connection = mysql.createPool(config.mysql);

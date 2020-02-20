@@ -7,7 +7,7 @@ const errorHandler = (error, req, res, next) => {
     error: { message: error.message }
   };
 
-  if (process.env.ENV === 'develop')
+  if (process.env.NODE_ENV === 'develop')
     response.debug = error;
 
   res.json(response);

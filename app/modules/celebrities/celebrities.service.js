@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 // Import utilities
-const config = require(`../../config/${process.env.ENV}.config`);
+const config = require(`../../config/${process.env.NODE_ENV}.config`);
 const { dataFormatHelper, validationHelper, fileUploadHelper } = require('../../helpers');
 // Import model
 const Celebrity = require('./celebrity.model');

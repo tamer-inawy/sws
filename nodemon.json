@@ -1,5 +1,5 @@
 {
   "env": {
-      "ENV": "develop"
+      "NODE_ENV": "develop"
   }
 }

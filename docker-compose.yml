@@ -27,7 +27,7 @@ services:
   api:
     build: .
     environment:
-      - ENV=develop
+      - NODE_ENV=develop
     depends_on:
       - mariadb
     volumes:

@@ -1,6 +1,6 @@
 const express = require('express');
 // Import utilities
-const config = require(`../../config/${process.env.ENV}.config`);
+const config = require(`../../config/${process.env.NODE_ENV}.config`);
 const { fileUploadHelper } = require('../../helpers');
 const { authMiddleware } = require('../../middlewares');
 // Import controller

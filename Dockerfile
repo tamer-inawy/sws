@@ -15,7 +15,7 @@ WORKDIR /usr/src/app
 # # Copy the app source
 # COPY . .
 
-ENV ENV=develop
+ENV NODE_ENV=develop
 
 EXPOSE 3000
 # CMD [ "node", "server.js" ]
