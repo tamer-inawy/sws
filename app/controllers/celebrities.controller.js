@@ -1,9 +1,5 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
-
-const config = require(`../config/${process.env.ENV}.config`);
-const { dataFormatHelper } = require('../helpers');
 const celebritiesService = require('../services/celebrities.service');
 
 const celebritiesController = {
@@ -56,7 +52,7 @@ const celebritiesController = {
   },
 
   getCelebrity: (req, res, next) => {
-    const celebrityId = req.params.celebrityId;
+    const celebrityId = +req.params.celebrityId;
 
     // handle validation
     if (!celebrityId) {
@@ -82,7 +78,7 @@ const celebritiesController = {
   },
 
   updateCelebrity(req, res, next) {
-    const celebrityId = req.params.celebrityId;
+    const celebrityId = +req.params.celebrityId;
 
     // TODO: handle validation 
     let valid = true;
@@ -90,6 +86,13 @@ const celebritiesController = {
       if (req.file)
         celebritiesService.clearMedia(req.file.path);
       const err = new Error('Please provide a valid data!');
+      throw err;
+    }
+    if(req.user.id !== celebrityId) {
+      if (req.file)
+        celebritiesService.clearMedia(req.file.path);
+      const err = new Error('Unauthorized request!');
+      err.status = 403;
       throw err;
     }
 
@@ -120,7 +123,7 @@ const celebritiesController = {
     const email = req.body.email;
 
     // Validate credentials
-    celebritiesService.validateCelebrityCredintials(email, password)
+    celebritiesService.authenticate(email, password)
       .then((results) => {
         if (!results) {
           const err = new Error('Invalid email or password!');
@@ -128,15 +131,7 @@ const celebritiesController = {
           throw err;
         }
 
-        const data = {
-          id: results.id,
-          name: results.name,
-          email: results.email
-        };
-        // TODO: move the token creation to auth service
-        data.token = jwt.sign(data, config.jwt.secrit, { expiresIn: config.jwt.expiration });
-
-        res.locals.data = data;
+        res.locals.data = results;
         next();;
       })
       .catch(err => {

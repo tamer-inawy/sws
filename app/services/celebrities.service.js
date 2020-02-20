@@ -1,3 +1,6 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
 const config = require(`../config/${process.env.ENV}.config`);
 const Celebrity = require('../models/celebrity.model');
 const { dataFormatHelper, validationHelper, fileUploadHelper } = require('../helpers');
@@ -8,10 +11,11 @@ const celebritiesService = {
     const newCelebrity = new Celebrity(data);
 
     return Celebrity.createCelebrity(newCelebrity)
-      .then(result => {
+      .then(results => {
         if (filePath)
-          fileUploadHelper.moveFile(filePath, `${config.celebrities.mediaPath}/${result.id}/`);
-        return result;
+          fileUploadHelper.moveFile(filePath, `${config.celebrities.mediaPath}/${results.id}/`);
+        const { password, ...resultsWitoutPassword } = results;
+        return resultsWitoutPassword;
       })
       .catch(err => {
         if (filePath)
@@ -27,9 +31,17 @@ const celebritiesService = {
 
   getAllCelebrities: () => Celebrity.getAllCelebrities(),
 
-  getCelebrity: id => Celebrity.getCelebrity(id),
+  getCelebrity: id => Celebrity.getCelebrity(id)
+    .then(results => {
+      const { password, ...resultsWitoutPassword } = results;
+      return resultsWitoutPassword;
+    }),
 
-  findCelebrityByEmail: email => Celebrity.findCelebrityByEmail(email),
+  findCelebrityByEmail: email => Celebrity.findCelebrityByEmail(email)
+    .then(results => {
+      const { password, ...resultsWitoutPassword } = results;
+      return resultsWitoutPassword;
+    }),
 
   updateCelebrity(celebrityId, data, filePath) {
     if (data.password)
@@ -41,10 +53,10 @@ const celebritiesService = {
     delete updatedCelebrity.email;
 
     return Celebrity.updateCelebrity(celebrityId, updatedCelebrity)
-      .then(result => {
+      .then(results => {
         if (filePath)
           fileUploadHelper.moveFile(filePath, `${config.celebrities.mediaPath}/${celebrityId}/`);
-        return Celebrity.getCelebrity(result.id)
+        return this.getCelebrity(results.id)
       })
       .catch(err => {
         if (filePath)
@@ -53,17 +65,28 @@ const celebritiesService = {
       });
   },
 
-  validateCelebrityCredintials: function(email, password) { return this.findCelebrityByEmail(email).then(result => {
-    // validate email
-    if (!result)
-      return false;
-    // Validate password
-    if (!validationHelper.comparePassword(password, result.password))
-      return false;
+  authenticate(email, password) {
+    return Celebrity.findCelebrityByEmail(email).then(results => {
+      // validate email
+      if (!results)
+        return false;
+      // Validate password
+      if (!bcrypt.compareSync(password, results.password))
+        return false;
 
-    return result;
+      const data = {
+        id: results.id,
+        name: results.name,
+        email: results.email,
+        role: 'Celebrity',
+      };
+      // create token
+      data.token = jwt.sign(data, config.jwt.secrit, { expiresIn: config.jwt.expiration });
 
-  })},
+      return data;
+
+    })
+  },
 
   clearMedia(filePath) {
     fileUploadHelper.deleteFile(filePath);

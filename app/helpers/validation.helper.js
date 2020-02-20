@@ -1,30 +1,26 @@
 'user strict';
 
-const bcrypt = require('bcrypt');
-
 const validationHelper = {
   validate(schema, data) {
-    const result = {isValid: true};
+    const results = {isValid: true};
 
     for(field of schema) {
       if (field.required && !data.hasOwnProperty(field.name)) {
-        result.isValid = false;
-        result.field = field.name;
-        result.rule = 'required';
-        return result;
+        results.isValid = false;
+        results.field = field.name;
+        results.rule = 'required';
+        return results;
       }
       if(field.match && !field.match.test(data[field.name])) {
-        result.isValid = false;
-        result.field = field.name;
-        result.rule = 'match';
-        return result;
+        results.isValid = false;
+        results.field = field.name;
+        results.rule = 'match';
+        return results;
       }
     }
 
-    return result;
+    return results;
   },
-
-  comparePassword: (pass, hashedPass) => bcrypt.compareSync(pass, hashedPass)
 
 }
 
