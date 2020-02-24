@@ -12,6 +12,7 @@ const auth = role => (req, res, next) => {
 
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, config.jwt.secrit);
+    console.log('decoded', decoded);
     if (decoded.role !== role && decoded.role !== 'Admin') {
       err = new Error('Forbidden request!');
       err.status = 403;

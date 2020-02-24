@@ -1,8 +1,8 @@
 'use strict';
 
-const celebritiesService = require('./celebrities.service');
+const usersService = require('./users.service');
 
-const celebritiesController = {
+const usersController = {
 
   create: (req, res, next) => {
     let filePath = false;
@@ -12,20 +12,20 @@ const celebritiesController = {
     }
 
     // handle validation 
-    const validate = celebritiesService.validate(req.body);
+    const validate = usersService.validate(req.body);
     if (!validate.isValid) {
       if (req.file)
-        celebritiesService.clearMedia(req.file.path);
+        usersService.clearMedia(req.file.path);
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
       next(err);
     }
 
-    celebritiesService.create(req.body, filePath)
+    usersService.create(req.body, filePath)
       .then((celebrity) => {
         res.locals.data = celebrity;
-        next();
+        next();;
       })
       .catch(err => {
         if (err.errno === 1062) {
@@ -40,9 +40,9 @@ const celebritiesController = {
   },
 
   getAll: (req, res, next) => {
-    return celebritiesService.getAll()
-      .then((celebrities) => {
-        res.locals.data = celebrities;
+    return usersService.getAll()
+      .then((users) => {
+        res.locals.data = users;
         next();
       })
       .catch((err) => {
@@ -52,15 +52,15 @@ const celebritiesController = {
   },
 
   get: (req, res, next) => {
-    const celebrityId = +req.params.celebrityId;
+    const userId = +req.params.userId;
 
     // handle validation
-    if (!celebrityId) {
+    if (!userId) {
       const err = new Error('Please provide a valid data!');
       next(err);
     }
 
-    return celebritiesService.get(celebrityId)
+    return usersService.get(userId)
       .then((celebrity) => {
         if (!celebrity) {
           const err = new Error('Can\'t retrieve the data!');
@@ -78,19 +78,19 @@ const celebritiesController = {
   },
 
   update(req, res, next) {
-    const celebrityId = +req.params.celebrityId;
+    const userId = +req.params.userId;
 
     // TODO: handle validation 
     let valid = true;
     if (!valid) {
       if (req.file)
-        celebritiesService.clearMedia(req.file.path);
+        usersService.clearMedia(req.file.path);
       const err = new Error('Please provide a valid data!');
       throw err;
     }
-    if (+req.user.id !== celebrityId) {
+    if (+req.user.id !== userId) {
       if (req.file)
-        celebritiesService.clearMedia(req.file.path);
+        usersService.clearMedia(req.file.path);
       const err = new Error('Unauthorized request!');
       err.status = 403;
       throw err;
@@ -102,10 +102,10 @@ const celebritiesController = {
       filePath = req.file.path;
     }
 
-    celebritiesService.update(celebrityId, req.body, filePath)
+    usersService.update(userId, req.body, filePath)
       .then((celebrity) => {
         res.locals.data = celebrity;
-        next();
+        next();;
       })
       .catch(err => {
         console.log(err);
@@ -123,7 +123,7 @@ const celebritiesController = {
     const email = req.body.email;
 
     // Validate credentials
-    celebritiesService.authenticate(email, password)
+    usersService.authenticate(email, password)
       .then((results) => {
         if (!results) {
           const err = new Error('Invalid email or password!');
@@ -132,24 +132,15 @@ const celebritiesController = {
         }
 
         res.locals.data = results;
-        next();
+        next();;
       })
       .catch(err => {
         console.log(err);
         err.message = err.message || 'Can\'t retrieve the data!';
         next(err);
       });
-  },
-
-  getVideos(req, res, next) {
-    const celebrityId = +req.params.celebrityId;
-    return celebritiesService.getVideos(celebrityId)
-      .then((results) => {
-        res.locals.data = results;
-        next();
-      })
-  },
+  }
 
 };
 
-module.exports = celebritiesController;
+module.exports = usersController;

@@ -11,7 +11,7 @@ const config = {
 
   image: {
     maxFileSize: 1024 * 1024 * 25, // in bytes
-    allowedImageTypes: [
+    allowedTypes: [
       'image/jpeg', // .jpg .jpeg .jpe
       'image/png', // .png
       'image/gif', // .gif
@@ -38,10 +38,18 @@ const config = {
     dir: 'media/celebrities/',
   },
 
+  users: {
+    dir: 'media/users/',
+  },
+
 };
 
 config.celebrities.mediaPath = `public/${config.celebrities.dir}`;
 config.celebrities.uploadsPath = `${config.celebrities.mediaPath}uploads/`;
 config.celebrities.mediaUrl = `${config.celebrities.dir}`;
+
+config.users.mediaPath = `public/${config.users.dir}`;
+config.users.uploadsPath = `${config.users.mediaPath}uploads/`;
+config.users.mediaUrl = `${config.users.dir}`;
 
 module.exports = config;

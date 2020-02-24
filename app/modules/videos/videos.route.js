@@ -4,7 +4,7 @@ const config = require(`../../config/${process.env.NODE_ENV}.config`);
 const { fileUploadHelper } = require('../../helpers');
 const { authMiddleware } = require('../../middlewares');
 // Import controller
-const celebritiesController = require('./celebrities.controller');
+const videosController = require('./videos.controller');
 
 const router = express.Router();
 const videoUploaderConfis = [
@@ -14,31 +14,27 @@ const videoUploaderConfis = [
   config.video.maxFileSize
 ];
 
-router.get('/', celebritiesController.getAll);
+router.get('/', videosController.getAll);
 
 router.post('/',
   authMiddleware('Celebrity'),
   fileUploadHelper.getSingleUploader(...videoUploaderConfis),
-  celebritiesController.create);
+  videosController.create);
 
-router.get('/videos/:celebrityId', celebritiesController.getVideos);
+router.get('/:videoId', videosController.get);
 
-router.get('/:celebrityId', celebritiesController.get);
-
-router.patch('/:celebrityId',
+router.patch('/:videoId',
   authMiddleware('Celebrity'),
   fileUploadHelper.getSingleUploader(...videoUploaderConfis),
-  celebritiesController.update);
+  videosController.update);
 
-// TODO: implement delete celebrity
-router.delete('/:celebrityId',
+// TODO: implement delete video
+router.delete('/:videoId',
   authMiddleware('Celebrity'),
   (req, res, next) => {
     res.status(401).json({
       message: 'Celebrities can\'t be deleted!'
     });
   });
-
-router.post('/login', celebritiesController.login);
 
 module.exports = router;

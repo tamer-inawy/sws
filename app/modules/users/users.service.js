@@ -4,17 +4,17 @@ const bcrypt = require('bcrypt');
 const config = require(`../../config/${process.env.NODE_ENV}.config`);
 const { dataFormatHelper, validationHelper, fileUploadHelper } = require('../../helpers');
 // Import model
-const Celebrity = require('./celebrity.model');
+const User = require('./user.model');
 
-const celebritiesService = {
+const usersService = {
   create(data, filePath) {
     data.password = dataFormatHelper.passwordHash(data.password, config.saltRound);
-    const newCelebrity = new Celebrity(data);
+    const newUser = new User(data);
 
-    return Celebrity.create(newCelebrity)
+    return User.create(newUser)
       .then(results => {
         if (filePath)
-          fileUploadHelper.moveFile(filePath, `${config.celebrities.mediaPath}/${results.id}/`);
+          fileUploadHelper.moveFile(filePath, `${config.users.mediaPath}/${results.id}/`);
         const { password, ...resultsWitoutPassword } = results;
         return resultsWitoutPassword;
       })
@@ -26,17 +26,17 @@ const celebritiesService = {
   },
 
   validate(data) {
-    const newCelebrity = new Celebrity(data);
-    return validationHelper.validate(Celebrity.getSchema(), newCelebrity);
+    const newUser = new User(data);
+    return validationHelper.validate(User.getSchema(), newUser);
   },
 
-  getAll: () => Celebrity.getAll()
+  getAll: () => User.getAll()
     .then(results => results.map(el => {
       const { password, ...restOfEl } = el;
       return restOfEl;
     })),
 
-  get: id => Celebrity.get(id)
+  get: id => User.get(id)
     .then(results => {
       if (!results)
         return false;
@@ -44,25 +44,25 @@ const celebritiesService = {
       return resultsWitoutPassword;
     }),
 
-  findByEmail: email => Celebrity.findByEmail(email)
+  findByEmail: email => User.findByEmail(email)
     .then(results => {
       const { password, ...resultsWitoutPassword } = results;
       return resultsWitoutPassword;
     }),
 
-  update(celebrityId, data, filePath) {
+  update(userId, data, filePath) {
     if (data.password)
       data.password = dataFormatHelper.passwordHash(data.password, config.saltRound);
 
-    const updatedCelebrity = new Celebrity(data);
+    const updatedUser = new User(data);
 
     // Prevent email update
-    delete updatedCelebrity.email;
+    delete updatedUser.email;
 
-    return Celebrity.update(celebrityId, updatedCelebrity)
+    return User.update(userId, updatedUser)
       .then(results => {
         if (filePath)
-          fileUploadHelper.moveFile(filePath, `${config.celebrities.mediaPath}/${celebrityId}/`);
+          fileUploadHelper.moveFile(filePath, `${config.users.mediaPath}/${userId}/`);
         return this.get(results.id)
       })
       .catch(err => {
@@ -73,7 +73,8 @@ const celebritiesService = {
   },
 
   authenticate(email, password) {
-    return Celebrity.findByEmail(email).then(results => {
+    return User.findByEmail(email).then(results => {
+      console.log(results)
       // validate email
       if (!results)
         return false;
@@ -85,7 +86,7 @@ const celebritiesService = {
         id: results.id,
         name: results.name,
         email: results.email,
-        role: 'Celebrity',
+        role: 'User',
       };
       // create token
       data.token = jwt.sign(data, config.jwt.secrit, { expiresIn: config.jwt.expiration });
@@ -99,10 +100,6 @@ const celebritiesService = {
     fileUploadHelper.deleteFile(filePath);
   },
 
-  getVideos(celebrityId) {
-    return Celebrity.getVideos(celebrityId);
-  }
-
 };
 
-module.exports = celebritiesService;
+module.exports = usersService;

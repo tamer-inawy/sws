@@ -93,9 +93,26 @@ const mysqlHelper = {
         }
       });
     });
-
   },
+  
+  findMulti(table, search) {
+    return new Promise((resolve, reject) => {
+      // prepare the params
+      const series = `${Object.keys(search).join(' = ? AND ')} = ? `;
+      const params = Object.values(search);
+      const query = `SELECT * FROM ${table} WHERE ${series}`;
 
+      connection.query(query, params, (err, results) => {
+        if (err) {
+          console.log('error: ', err);
+          return reject(err);
+        }
+        else {
+          resolve(results);
+        }
+      });
+    });
+  },
 
 };
 

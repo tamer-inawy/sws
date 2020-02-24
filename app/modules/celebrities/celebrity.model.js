@@ -62,24 +62,28 @@ const Celebrity = function (celebrity) {
 // Celebrity Methods
 Celebrity.getSchema = () => [...schema.fields];
 
-Celebrity.createCelebrity = (newCelebrity) => {
+Celebrity.create = (newCelebrity) => {
   return ormHelper.create(schema.table, newCelebrity);
 };
 
-Celebrity.getAllCelebrities = () => {
+Celebrity.getAll = () => {
   return ormHelper.getAll(schema.table);
 };
 
-Celebrity.getCelebrity = (celebrityId) => {
+Celebrity.get = (celebrityId) => {
   return ormHelper.getOne(schema.table, celebrityId);
 };
 
-Celebrity.updateCelebrity = (celebrityId, data) => {
+Celebrity.update = (celebrityId, data) => {
   return ormHelper.updateOne(schema.table, celebrityId, data);
 }
 
-Celebrity.findCelebrityByEmail = (email) => {
+Celebrity.findByEmail = (email) => {
   return ormHelper.findOne(schema.table, {email: email});
+};
+
+Celebrity.getVideos = (celebrityId) => {
+  return ormHelper.findMulti('videos', {celebrities_id: celebrityId});
 };
 
 module.exports = Celebrity;

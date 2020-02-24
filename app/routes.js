@@ -3,10 +3,14 @@
 const routers = require('express').Router();
 
 const celebrityRoutes = require('./modules/celebrities/celebrities.route');
+const userRoutes = require('./modules/users/users.route');
+const videoRoutes = require('./modules/videos/videos.route');
 const { responseMiddleware, errorHandlerMiddleware } = require('./middlewares');
 
 // Routers list
 routers.use('/celebrities', celebrityRoutes, responseMiddleware);
+routers.use('/users', userRoutes, responseMiddleware);
+routers.use('/videos', videoRoutes, responseMiddleware);
 
 // Helthcheck router
 routers.get('/healthcheck', (req, res, next) => {
