@@ -2,15 +2,15 @@ version: '3'
 
 services:
   mariadb:
-    # build: ./db
-    image: 'bitnami/mariadb:latest'
+    build: ./db
+    # image: 'bitnami/mariadb:latest'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - MYSQL_ROOT_PASSWORD=
       - MYSQL_RANDOM_ROOT_PASSWORD=no
       - MYSQL_DATABASE=sws
-    volumes:
-      - mariadb_data:/bitnami
+    # volumes:
+    #   - mariadb_data:/bitnami
     ports:
       - '3306:3306'
 
@@ -21,8 +21,8 @@ services:
     ports:
       - '80:80'
       - '443:443'
-    volumes:
-      - phpmyadmin_data:/bitnami
+    # volumes:
+    #   - phpmyadmin_data:/bitnami
 
   api:
     build: .
@@ -30,8 +30,8 @@ services:
       - NODE_ENV=develop
     depends_on:
       - mariadb
-    volumes:
-      - /home/newpharaoh21/workArea/sws:/usr/src/app
+    # volumes:
+    #   - /home/newpharaoh21/workArea/sws:/usr/src/app
     ports:
       - "3000:3000"
 
