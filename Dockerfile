@@ -11,6 +11,7 @@ WORKDIR /usr/src/app
 # # Install the dependancies
 # RUN npm install
 # # RUN npm ci --only=production
+RUN npm i -g apidoc
 
 # # Copy the app source
 # COPY . .

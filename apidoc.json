@@ -1,0 +1,8 @@
+{
+  "name": "Sout W Soura API",
+  "version": "1.0.0",
+  "description": "This is the API documentation for Sout W Soura app.",
+  "title": "SWS API",
+  "url": "http://192.168.56.101:3000",
+  "sampleUrl": "http://192.168.56.101:3000"
+}
