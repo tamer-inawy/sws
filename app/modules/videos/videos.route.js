@@ -17,7 +17,7 @@ const videoUploaderConfis = [
 router.get('/', videosController.getAll);
 
 router.post('/',
-  authMiddleware('Celebrity'),
+  authMiddleware('User'),
   fileUploadHelper.getSingleUploader(...videoUploaderConfis),
   videosController.create);
 
