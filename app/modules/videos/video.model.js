@@ -25,7 +25,15 @@ const schema = {
       name: 'video'
     },
     {
+      name: 'users_id',
+      required: true
+    },
+    {
       name: 'celebrities_id',
+      required: true
+    },
+    {
+      name: 'orders_id',
       required: true
     },
     {

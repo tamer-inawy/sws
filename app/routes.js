@@ -3,18 +3,20 @@
 const express = require('express');
 const routers = express.Router();
 
-const celebrityRoutes = require('./modules/celebrities/celebrities.route');
-const userRoutes = require('./modules/users/users.route');
-const videoRoutes = require('./modules/videos/videos.route');
+const celebritiesRoutes = require('./modules/celebrities/celebrities.route');
+const usersRoutes = require('./modules/users/users.route');
+const videosRoutes = require('./modules/videos/videos.route');
+const ordersRoutes = require('./modules/orders/orders.route');
 const { responseMiddleware, errorHandlerMiddleware } = require('./middlewares');
 
 // Static routes
 routers.use(express.static('public'));
 
 // Routers list
-routers.use('/celebrities', celebrityRoutes, responseMiddleware);
-routers.use('/users', userRoutes, responseMiddleware);
-routers.use('/videos', videoRoutes, responseMiddleware);
+routers.use('/celebrities', celebritiesRoutes, responseMiddleware);
+routers.use('/users', usersRoutes, responseMiddleware);
+routers.use('/videos', videosRoutes, responseMiddleware);
+routers.use('/orders', ordersRoutes, responseMiddleware);
 
 // Helthcheck router
 routers.get('/healthcheck', (req, res, next) => {
