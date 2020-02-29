@@ -18,7 +18,7 @@ routers.use('/users', usersRoutes, responseMiddleware);
 routers.use('/videos', videosRoutes, responseMiddleware);
 routers.use('/orders', ordersRoutes, responseMiddleware);
 
-// Helthcheck router
+// Helthcheck route
 routers.get('/healthcheck', (req, res, next) => {
   res.locals.data = {
     message: 'The server is up!'
