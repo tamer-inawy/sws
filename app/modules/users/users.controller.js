@@ -23,8 +23,8 @@ const usersController = {
     }
 
     usersService.create(req.body, filePath)
-      .then((celebrity) => {
-        res.locals.data = celebrity;
+      .then((user) => {
+        res.locals.data = user;
         next();;
       })
       .catch(err => {
@@ -61,13 +61,13 @@ const usersController = {
     }
 
     return usersService.get(userId)
-      .then((celebrity) => {
-        if (!celebrity) {
+      .then((user) => {
+        if (!user) {
           const err = new Error('Can\'t retrieve the data!');
           throw err;
         }
 
-        res.locals.data = celebrity;
+        res.locals.data = user;
         next();
       })
       .catch(err => {
@@ -98,13 +98,13 @@ const usersController = {
 
     let filePath = false;
     if (req.file) {
-      req.body.video = req.file.filename;
+      req.body.image = req.file.filename;
       filePath = req.file.path;
     }
 
     usersService.update(userId, req.body, filePath)
-      .then((celebrity) => {
-        res.locals.data = celebrity;
+      .then((user) => {
+        res.locals.data = user;
         next();;
       })
       .catch(err => {

@@ -26,7 +26,7 @@ routers.get('/healthcheck', (req, res, next) => {
   next();
 }, responseMiddleware);
 
-// Error handling
+// Not found error handling
 routers.use((req, res, next) => {
   const error = new Error('Request not found');
   error.status = 404;
