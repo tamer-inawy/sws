@@ -7,7 +7,7 @@ const usersController = {
   create: (req, res, next) => {
     let filePath = false;
     if (req.file) {
-      req.body.video = req.file.filename;
+      req.body.image = req.file.filename;
       filePath = req.file.path;
     }
 
