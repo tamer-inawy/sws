@@ -3,7 +3,6 @@ version: '3'
 services:
   mariadb:
     build: ./db
-    # image: 'bitnami/mariadb:latest'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - MYSQL_ROOT_PASSWORD=
@@ -33,8 +32,6 @@ services:
     ports:
       - '3000:3000'
 
-volumes:
-  mariadb_data:
-    driver: local
-  phpmyadmin_data:
-    driver: local
+# volumes:
+#   mariadb_data:
+#     driver: local

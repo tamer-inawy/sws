@@ -10,12 +10,14 @@ WORKDIR /usr/src/app
 
 # # Install the dependancies
 # RUN npm install
+# RUN npm i -g apidoc
 # # RUN npm ci --only=production
-RUN npm i -g apidoc
-# RUN apidoc -o public/docs -i app/modules
 
 # # Copy the app source
 # COPY . .
+
+# # Generate API documentations
+# RUN apidoc -o public/docs -i app/modules
 
 ENV NODE_ENV=develop
 

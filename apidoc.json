@@ -3,5 +3,5 @@
   "version": "1.0.0",
   "description": "This is the API documentations for Sout W Soura app.",
   "title": "SWS API Documentations",
-  "url": "http://192.168.56.101:3000"
+  "url": "http://<base_url>"
 }
