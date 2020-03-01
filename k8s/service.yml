@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sws
+spec:
+  selector:
+    app: sws
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+spec:
+  selector:
+    app: aws
+  ports:
+    - port: 3306
+      name: mariadb

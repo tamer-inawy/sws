@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sws
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sws
+  template:
+    metadata:
+      labels:
+        app: sws
+    spec:
+      containers:
+        - name: api
+          image: eu.gcr.io/sylvan-flight-265211/sws_api:0.1.0
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: develop
+        - name: mariadb
+          image: eu.gcr.io/sylvan-flight-265211/sws_mariadb:0.1.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "no"
+            - name: MYSQL_DATABASE
+              value: sws
