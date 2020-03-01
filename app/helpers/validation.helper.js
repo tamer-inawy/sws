@@ -1,5 +1,3 @@
-'user strict';
-
 const validationHelper = {
   validate(schema, data) {
     const results = {isValid: true};

@@ -1,5 +1,3 @@
-'user strict';
-
 const bcrypt = require("bcrypt");
 
 const formater = {

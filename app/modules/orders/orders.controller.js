@@ -1,5 +1,3 @@
-'use strict';
-
 const ordersService = require('./orders.service');
 
 const ordersController = {

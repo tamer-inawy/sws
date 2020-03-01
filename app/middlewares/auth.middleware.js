@@ -1,5 +1,3 @@
-'user strict';
-
 const jwt = require('jsonwebtoken');
 
 const config = require(`../config/${process.env.NODE_ENV}.config`);

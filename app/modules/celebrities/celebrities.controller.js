@@ -1,5 +1,3 @@
-'use strict';
-
 const celebritiesService = require('./celebrities.service');
 
 const celebritiesController = {

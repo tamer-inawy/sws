@@ -1,5 +1,3 @@
-'user strict';
-
 const { ormHelper } = require('../../helpers');
 
 // Set database schema

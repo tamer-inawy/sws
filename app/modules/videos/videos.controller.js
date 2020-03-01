@@ -1,5 +1,3 @@
-'use strict';
-
 const videosService = require('./videos.service');
 
 const videosController = {

@@ -1,5 +1,3 @@
-'user strict';
-
 const mysql = require('mysql');
 
 const config = require(`../config/${process.env.NODE_ENV}.config`);
