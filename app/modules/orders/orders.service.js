@@ -17,7 +17,7 @@ const ordersService = {
   update(orderId, data) {
     return Order.update(orderId, new Order(data))
       .then(results => {
-        return this.get(results.id)
+        return results ? this.get(results.id) : false;
       })
       .catch(err => {
         throw err;

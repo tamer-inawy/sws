@@ -80,16 +80,16 @@ const ordersController = {
 
     ordersService.update(orderId, req.body)
       .then((order) => {
+        if(!order) {
+          err = new Error('Wrong order!');
+          next(err);
+        }
         res.locals.data = order;
         next();
       })
       .catch(err => {
         console.log(err);
-        if (err.errno === 1062) {
-          err.message = 'The email is already in use!';
-        } else {
-          err.message = err.message || 'Can\'t retrieve the data!';
-        }
+        err.message = err.message || 'Can\'t retrieve the data!';
         next(err);
       });
   },

@@ -1,6 +1,5 @@
 const express = require('express');
 // Import utilities
-const config = require(`../../config/${process.env.NODE_ENV}.config`);
 const { authMiddleware } = require('../../middlewares');
 // Import controller
 const ordersController = require('./orders.controller');
@@ -18,7 +17,7 @@ router.get('/:orderId',
   ordersController.get);
 
 router.patch('/:orderId',
-  authMiddleware('Celebrity'),
+  authMiddleware(['User', 'Celebrity']),
   ordersController.update);
 
 // TODO: implement delete order
