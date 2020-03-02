@@ -19,7 +19,7 @@ const videosService = {
       .then(results => {
         if (filePath)
           fileUploadHelper.moveFile(filePath, `${config.celebrities.mediaPath}/${results.celebrities_id}/videos/`);
-        return this.get(results.id)
+        return results ? this.get(results.id) : false;
       })
       .catch(err => {
         if (filePath)

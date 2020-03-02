@@ -9,6 +9,7 @@ const videosController = {
       filePath = req.file.path;
     }
 
+    req.body.users_id = req.user.id;
     // handle validation 
     const validate = videosService.validate(req.body);
     if (!validate.isValid) {
@@ -104,6 +105,10 @@ const videosController = {
 
     videosService.update(videoId, req.body, filePath)
       .then((video) => {
+        if(!video) {
+          err = new Error('Wrong video!');
+          next(err);
+        }
         res.locals.data = video;
         next();
       })

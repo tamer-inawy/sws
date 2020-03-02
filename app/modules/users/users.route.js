@@ -15,7 +15,6 @@ const imageUploaderConfis = [
 ];
 
 router.get('/',
-  // authMiddleware('Admin'),
   usersController.getAll);
 
 router.post('/',
@@ -23,7 +22,6 @@ router.post('/',
   usersController.create);
 
 router.get('/:userId',
-authMiddleware('User'),
 usersController.get);
 
 router.patch('/:userId',

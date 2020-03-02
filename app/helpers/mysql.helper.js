@@ -68,6 +68,8 @@ const mysqlHelper = {
           return reject(err);
         }
         else {
+          if (!results.affectedRows)
+            resolve(false);
           resolve(data);
         }
       });
@@ -92,7 +94,7 @@ const mysqlHelper = {
       });
     });
   },
-  
+
   findMulti(table, search) {
     return new Promise((resolve, reject) => {
       // prepare the params
