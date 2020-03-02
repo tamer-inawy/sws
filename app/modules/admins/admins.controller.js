@@ -1,30 +1,21 @@
-const celebritiesService = require('./celebrities.service');
+const adminsService = require('./admins.service');
 
-const celebritiesController = {
+const adminsController = {
 
   create: (req, res, next) => {
-    let filePath = false;
-    if (req.file) {
-      req.body.video = req.file.filename;
-      filePath = req.file.path;
-    }
-    req.body.admins_id = req.user.id;
-
     // handle validation 
-    const validate = celebritiesService.validate(req.body);
+    const validate = adminsService.validate(req.body);
     if (!validate.isValid) {
-      if (req.file)
-        celebritiesService.clearMedia(req.file.path);
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
       next(err);
     }
 
-    celebritiesService.create(req.body, filePath)
-      .then((celebrity) => {
-        res.locals.data = celebrity;
-        next();
+    adminsService.create(req.body)
+      .then((admin) => {
+        res.locals.data = admin;
+        next();;
       })
       .catch(err => {
         if (err.errno === 1062) {
@@ -39,9 +30,9 @@ const celebritiesController = {
   },
 
   getAll: (req, res, next) => {
-    return celebritiesService.getAll()
-      .then((celebrities) => {
-        res.locals.data = celebrities;
+    return adminsService.getAll()
+      .then((admins) => {
+        res.locals.data = admins;
         next();
       })
       .catch((err) => {
@@ -51,22 +42,22 @@ const celebritiesController = {
   },
 
   get: (req, res, next) => {
-    const celebrityId = +req.params.celebrityId;
+    const adminId = +req.params.adminId;
 
     // handle validation
-    if (!celebrityId) {
+    if (!adminId) {
       const err = new Error('Please provide a valid data!');
       next(err);
     }
 
-    return celebritiesService.get(celebrityId)
-      .then((celebrity) => {
-        if (!celebrity) {
+    return adminsService.get(adminId)
+      .then((admin) => {
+        if (!admin) {
           const err = new Error('Can\'t retrieve the data!');
           throw err;
         }
 
-        res.locals.data = celebrity;
+        res.locals.data = admin;
         next();
       })
       .catch(err => {
@@ -77,34 +68,24 @@ const celebritiesController = {
   },
 
   update(req, res, next) {
-    const celebrityId = +req.params.celebrityId;
+    const adminId = +req.params.adminId;
 
     // TODO: handle validation 
     let valid = true;
     if (!valid) {
-      if (req.file)
-        celebritiesService.clearMedia(req.file.path);
       const err = new Error('Please provide a valid data!');
       throw err;
     }
-    if (+req.user.id !== celebrityId) {
-      if (req.file)
-        celebritiesService.clearMedia(req.file.path);
+    if (+req.user.id !== adminId) {
       const err = new Error('Unauthorized request!');
       err.status = 403;
       throw err;
     }
 
-    let filePath = false;
-    if (req.file) {
-      req.body.video = req.file.filename;
-      filePath = req.file.path;
-    }
-
-    celebritiesService.update(celebrityId, req.body, filePath)
-      .then((celebrity) => {
-        res.locals.data = celebrity;
-        next();
+    adminsService.update(adminId, req.body)
+      .then((admin) => {
+        res.locals.data = admin;
+        next();;
       })
       .catch(err => {
         console.log(err);
@@ -122,7 +103,7 @@ const celebritiesController = {
     const email = req.body.email;
 
     // Validate credentials
-    celebritiesService.authenticate(email, password)
+    adminsService.authenticate(email, password)
       .then((results) => {
         if (!results) {
           const err = new Error('Invalid email or password!');
@@ -131,24 +112,15 @@ const celebritiesController = {
         }
 
         res.locals.data = results;
-        next();
+        next();;
       })
       .catch(err => {
         console.log(err);
         err.message = err.message || 'Can\'t retrieve the data!';
         next(err);
       });
-  },
-
-  getVideos(req, res, next) {
-    const celebrityId = +req.params.celebrityId;
-    return celebritiesService.getVideos(celebrityId)
-      .then((results) => {
-        res.locals.data = results;
-        next();
-      })
-  },
+  }
 
 };
 
-module.exports = celebritiesController;
+module.exports = adminsController;

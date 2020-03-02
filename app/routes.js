@@ -1,6 +1,7 @@
 const express = require('express');
 const routers = express.Router();
 
+const adminsRoutes = require('./modules/admins/admins.route');
 const celebritiesRoutes = require('./modules/celebrities/celebrities.route');
 const usersRoutes = require('./modules/users/users.route');
 const videosRoutes = require('./modules/videos/videos.route');
@@ -11,6 +12,7 @@ const { responseMiddleware, errorHandlerMiddleware } = require('./middlewares');
 routers.use(express.static('public'));
 
 // Routers list
+routers.use('/admins', adminsRoutes, responseMiddleware);
 routers.use('/celebrities', celebritiesRoutes, responseMiddleware);
 routers.use('/users', usersRoutes, responseMiddleware);
 routers.use('/videos', videosRoutes, responseMiddleware);

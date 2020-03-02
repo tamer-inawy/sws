@@ -43,6 +43,10 @@ const schema = {
       required: true
     },
     {
+      name: 'admins_id',
+      required: true
+    },
+    {
       name: 'created_at'
     }
   ]

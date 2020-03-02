@@ -88,7 +88,7 @@ router.get('/', celebritiesController.getAll);
  *    }
  */
 router.post('/',
-  // authMiddleware('Admin'),
+  authMiddleware('Admin'),
   fileUploadHelper.getSingleUploader(...videoUploaderConfis),
   celebritiesController.create);
 
