@@ -1,3 +1,9 @@
+/**
+ * @file        dataFormat.helper.js
+ * @description A helper library for data formatting
+ * @author      Tamer Inawy <tamer.inawy@gmail.com>
+ * 
+ */
 const bcrypt = require("bcrypt");
 
 const formater = {

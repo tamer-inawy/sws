@@ -1,3 +1,9 @@
+/**
+ * @file        mysql.helper.js
+ * @description A helper library for MySQL (OEM)
+ * @author      Tamer Inawy <tamer.inawy@gmail.com>
+ * 
+ */
 const mysql = require('mysql');
 
 const config = require(`../config/${process.env.NODE_ENV}.config`);

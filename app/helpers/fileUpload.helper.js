@@ -1,3 +1,9 @@
+/**
+ * @file        fileUpload.helper.js
+ * @description A helper library for uploading files
+ * @author      Tamer Inawy <tamer.inawy@gmail.com>
+ * 
+ */
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');

@@ -5,16 +5,15 @@ LABEL maintainer="tamer.inawy@gmail.com"
 # Create the app directory
 WORKDIR /usr/src/app
 
-# # Copy package.json and package-lock.json
-# COPY package*.json ./
+# # Copy the app source
+# COPY . .
 
 # # Install the dependancies
 # RUN npm install
-# RUN npm i -g apidoc
 # # RUN npm ci --only=production
 
-# # Copy the app source
-# COPY . .
+# Install the document generator
+RUN npm i -g apidoc
 
 # # Generate API documentations
 # RUN apidoc -o public/docs -i app/modules

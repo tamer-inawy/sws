@@ -19,7 +19,10 @@ const videoUploaderConfis = [
  * @apiVersion 0.1.0
  * @apiGroup Celebrities
  * @apiPermission none
+ * 
+ * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object[]} data Celebrity's list (Array of objects)
+ * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
@@ -59,6 +62,7 @@ router.get('/', celebritiesController.getAll);
  * @apiVersion 0.1.0
  * @apiGroup Celebrities
  * @apiPermission Admin
+ * 
  * @apiParam {String} name Celebrity's name
  * @apiParam {String} email Celebrity's email
  * @apiParam {String} password Celebrity's password
@@ -66,9 +70,12 @@ router.get('/', celebritiesController.getAll);
  * @apiParam {Number} urgent_price Urgent video price
  * @apiParam {Number} event_price Event price
  * @apiParam {String} short_desc Short description
- * @apiParam {String} description Full description
- * @apiParam {File} video
+ * @apiParam {String} desc Full description
+ * @apiParam {File} video Celebrity's introduction video
+ * 
+ * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data The created celebrity details
+ * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
@@ -97,7 +104,10 @@ router.post('/',
  * @apiVersion 0.1.0
  * @apiGroup Celebrities
  * @apiPermission none
+ * 
+ * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data Celebrity's videos list (Array of objects)
+ * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
@@ -119,11 +129,14 @@ router.post('/',
 router.get('/videos/:celebrityId', celebritiesController.getVideos);
 
 /**
- * @api {get} /celebrities Get celebrity's details
+ * @api {get} /celebrities/:id Get celebrity's details
  * @apiVersion 0.1.0
  * @apiGroup Celebrities
  * @apiPermission none
+ * 
+ * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data The celebrity details
+ * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
@@ -149,7 +162,19 @@ router.get('/:celebrityId', celebritiesController.get);
  * @apiVersion 0.1.0
  * @apiGroup Celebrities
  * @apiPermission Celebrity
+ * 
+ * @apiParam {String} [name] Celebrity's name
+ * @apiParam {String} [password] Celebrity's password
+ * @apiParam {Number} [video_price] Video price
+ * @apiParam {Number} [urgent_price] Urgent video price
+ * @apiParam {Number} [event_price] Event price
+ * @apiParam {String} [short_desc] Short description
+ * @apiParam {String} [desc] Full description
+ * @apiParam {File} [video] Celebrity's introduction video
+ * 
+ * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data The updated celebrity details
+ * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
@@ -195,7 +220,13 @@ router.delete('/:celebrityId',
  * @apiVersion 0.1.0
  * @apiGroup Celebrities
  * @apiPermission none
+ * 
+ * @apiParam {String} email Celebrity's email address
+ * @apiParam {String} password Celebrity's password
+ * 
+ * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data The celebrity's details
+ * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {

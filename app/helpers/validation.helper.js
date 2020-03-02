@@ -1,3 +1,9 @@
+/**
+ * @file        validation.helper.js
+ * @description A helper library for data validation
+ * @author      Tamer Inawy <tamer.inawy@gmail.com>
+ * 
+ */
 const validationHelper = {
   validate(schema, data) {
     const results = {isValid: true};

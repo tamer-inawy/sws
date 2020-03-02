@@ -1,3 +1,9 @@
+/**
+ * @file        auth.middleware.js
+ * @description A middleware to handle authentication
+ * @author      Tamer Inawy <tamer.inawy@gmail.com>
+ * 
+ */
 const jwt = require('jsonwebtoken');
 
 const config = require(`../config/${process.env.NODE_ENV}.config`);
