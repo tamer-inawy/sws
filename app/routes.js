@@ -6,6 +6,7 @@ const celebritiesRoutes = require('./modules/celebrities/celebrities.route');
 const usersRoutes = require('./modules/users/users.route');
 const videosRoutes = require('./modules/videos/videos.route');
 const ordersRoutes = require('./modules/orders/orders.route');
+const categoriesRoutes = require('./modules/categories/categories.route');
 const { responseMiddleware, errorHandlerMiddleware } = require('./middlewares');
 
 // Static routes
@@ -17,6 +18,7 @@ routers.use('/celebrities', celebritiesRoutes, responseMiddleware);
 routers.use('/users', usersRoutes, responseMiddleware);
 routers.use('/videos', videosRoutes, responseMiddleware);
 routers.use('/orders', ordersRoutes, responseMiddleware);
+routers.use('/categories', categoriesRoutes, responseMiddleware);
 
 // Helthcheck route
 routers.get('/healthcheck', (req, res, next) => {

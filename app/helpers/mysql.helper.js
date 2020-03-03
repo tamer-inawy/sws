@@ -44,7 +44,7 @@ const mysqlHelper = {
 
   getOne(table, id) {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM ${table} WHERE id = ?`, id, (err, results) => {
+      connection.query(`SELECT * FROM ${table} WHERE id = ? LIMIT 0, 1`, id, (err, results) => {
         if (err) {
           console.log('error: ', err);
           return reject(err);
@@ -117,6 +117,21 @@ const mysqlHelper = {
           resolve(results);
         }
       });
+    });
+  },
+
+  findJoin([primaryTable, primaryField], [secondaryTable, secondaryField, selectField], where) {
+    return new Promise((resolve, reject) => {
+      const conn = connection.query(`SELECT \`${primaryTable}\`.*, \`${secondaryTable}\`.\`${selectField}\` FROM ${primaryTable} LEFT JOIN ${secondaryTable} ON ${primaryTable}.${primaryField} = ${secondaryTable}.${secondaryField} ${where ? 'WHERE ' + where : ''}`, (err, results) => {
+        if (err) {
+          console.log('error: ', err);
+          return reject(err);
+        }
+        else {
+          resolve(results);
+        }
+      });
+      console.log(conn.sql)
     });
   },
 

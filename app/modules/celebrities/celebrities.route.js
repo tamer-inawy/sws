@@ -38,7 +38,8 @@ const videoUploaderConfis = [
  *          "short_desc": "This is the short description.",
  *          "desc": "This is the full description.",
  *          "video": "1582407425907_SampleVideo_640x360_1mb.mp4",
- *          "created_at": "2020-02-22T16:36:36.000Z"
+ *          "created_at": "2020-02-22T16:36:36.000Z",
+ *          "categories": [1,2]
  *        },
  *        {
  *          "id": 2,
@@ -51,6 +52,7 @@ const videoUploaderConfis = [
  *          "desc": "This is the full description.",
  *          "video": "1582407416363_SampleVideo_640x360_1mb.mp4",
  *          "created_at": "2020-02-22T21:36:56.000Z"
+ *          "categories": []
  *        }
  *      ]
  *    }
@@ -72,6 +74,7 @@ router.get('/', celebritiesController.getAll);
  * @apiParam {String} short_desc Short description
  * @apiParam {String} desc Full description
  * @apiParam {File} video Celebrity's introduction video
+ * @apiParam {Array} categories Celebrity's categories list
  * 
  * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data The created celebrity details
@@ -151,6 +154,7 @@ router.get('/videos/:celebrityId', celebritiesController.getVideos);
  *        "short_desc": "This is the short description.",
  *        "desc": "This is the full description.",
  *        "video": "1582407425907_SampleVideo_640x360_1mb.mp4",
+ *        "categories": [3]
  *        "created_at": "2020-02-22T16:36:36.000Z"
  *        }
  *    }
