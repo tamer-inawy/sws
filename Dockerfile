@@ -8,7 +8,6 @@ WORKDIR /usr/src/app
 # Copy the app source
 COPY . .
 
-# RUN npm ci --only=production
 # Install the dependancies
 # Install the document generator
 # Generate API documentations
