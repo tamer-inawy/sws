@@ -5,21 +5,19 @@ LABEL maintainer="tamer.inawy@gmail.com"
 # Create the app directory
 WORKDIR /usr/src/app
 
-# # Copy the app source
-# COPY . .
+# Copy the app source
+COPY . .
 
-# # Install the dependancies
-# RUN npm install
-# # RUN npm ci --only=production
-
+# RUN npm ci --only=production
+# Install the dependancies
 # Install the document generator
-RUN npm i -g apidoc
-
-# # Generate API documentations
-# RUN apidoc -o public/docs -i app/modules
+# Generate API documentations
+RUN npm install \
+  && npm i -g apidoc \
+  && apidoc -o public/docs -i app/modules
 
 ENV NODE_ENV=develop
 
 EXPOSE 3000
-# CMD [ "node", "server.js" ]
-CMD tail -f /dev/null
+CMD [ "node", "server.js" ]
+# CMD tail -f /dev/null

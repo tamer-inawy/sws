@@ -17,7 +17,7 @@ metadata:
   name: mariadb
 spec:
   selector:
-    app: aws
+    app: sws
   ports:
     - port: 3306
-      name: mariadb
+  clusterIP: None

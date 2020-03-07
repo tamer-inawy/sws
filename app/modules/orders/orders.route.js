@@ -88,7 +88,7 @@ router.get('/:orderId',
   authMiddleware(['User', 'Celebrity']),
   ordersController.get);
 
-  /**
+/**
  * @api {patch} /orders/:id Update the order's details
  * @apiVersion 0.1.0
  * @apiGroup Orders

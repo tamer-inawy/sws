@@ -5,6 +5,8 @@ const adminsRoutes = require('./modules/admins/admins.route');
 const celebritiesRoutes = require('./modules/celebrities/celebrities.route');
 const usersRoutes = require('./modules/users/users.route');
 const videosRoutes = require('./modules/videos/videos.route');
+const adsRoutes = require('./modules/ads/ads.route');
+const locationsRoutes = require('./modules/locations/locations.route');
 const ordersRoutes = require('./modules/orders/orders.route');
 const categoriesRoutes = require('./modules/categories/categories.route');
 const { responseMiddleware, errorHandlerMiddleware } = require('./middlewares');
@@ -17,6 +19,8 @@ routers.use('/admins', adminsRoutes, responseMiddleware);
 routers.use('/celebrities', celebritiesRoutes, responseMiddleware);
 routers.use('/users', usersRoutes, responseMiddleware);
 routers.use('/videos', videosRoutes, responseMiddleware);
+routers.use('/ads', adsRoutes, responseMiddleware);
+routers.use('/locations', locationsRoutes, responseMiddleware);
 routers.use('/orders', ordersRoutes, responseMiddleware);
 routers.use('/categories', categoriesRoutes, responseMiddleware);
 
