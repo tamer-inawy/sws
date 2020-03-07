@@ -11,11 +11,11 @@ const router = express.Router();
 /**
  * @api {get} /locations List all locations
  * @apiVersion 0.1.0
- * @apiGroup Ads
+ * @apiGroup Locations
  * @apiPermission none
  * 
  * @apiSuccess {String} status The request status (success|failed)
- * @apiSuccess {Object[]} data Ad's list (Array of objects)
+ * @apiSuccess {Object[]} data Location's list (Array of objects)
  * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
@@ -37,7 +37,7 @@ router.get('/', locationsController.getAll);
 /**
  * @api {post} /locations Create new location
  * @apiVersion 0.1.0
- * @apiGroup Ads
+ * @apiGroup Locations
  * @apiPermission User
  * 
  * @apiParam {String} location The location's lat, long
@@ -68,7 +68,7 @@ router.post('/',
 /**
  * @api {get} /locations/:id Get location's details
  * @apiVersion 0.1.0
- * @apiGroup Ads
+ * @apiGroup Locations
  * @apiPermission User, Celebrity
  * 
  * @apiSuccess {String} status The request status (success|failed)
@@ -92,7 +92,7 @@ router.get('/:locationId', locationsController.get);
 /**
  * @api {patch} /locations/:id Update the location's details
  * @apiVersion 0.1.0
- * @apiGroup Ads
+ * @apiGroup Locations
  * @apiPermission User, Celebrity
  * 
  * @apiParam {String} [location] The location's lat, long

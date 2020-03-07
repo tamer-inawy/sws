@@ -9,7 +9,10 @@ const adminData = {
 adminsService.create(adminData)
 .then(results => {
   console.log('Init admin has been added!');
+  console.log(results);
+  process.exit();
 })
 .catch(err => {
   console.log('Can\'t add the admin', err);
+  process.exit(1);
 })
