@@ -80,9 +80,20 @@ router.get('/', adsController.getAll);
  * @apiVersion 0.1.0
  * @apiGroup Ads
  * @apiPermission Admin
- * @apiParam {String} [urgent] Send 1 if the request is urgent
- * @apiParam {Number} price Price
- * @apiParam {String} request_type The ad type. Send videos, ads, or events
+ * 
+ * @apiParam {String} company The company's name
+ * @apiParam {String} instructions The ad instructions
+ * @apiParam {String} [photo] Photo
+ * @apiParam {String} users_id The user's id
+ * @apiParam {String} celebrities_id The celebrity's id
+ * @apiParam {String} type The ad's type
+ * @apiParam {String} working_days The number of required working days
+ * @apiParam {String} date_from The starting of the suggested date
+ * @apiParam {String} date_to The end of the suggested date
+ * @apiParam {String} [director] The director's name
+ * @apiParam {String} locations_id The location's id
+ * @apiParam {String} orders_id The order's id
+ * 
  * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data The created ad details
  * @apiSuccessExample {json} Success
@@ -116,8 +127,23 @@ router.post('/',
  * @apiVersion 0.1.0
  * @apiGroup Ads
  * @apiPermission User, Celebrity
+ * 
+ * @apiParam {String} [company] The company's name
+ * @apiParam {String} [instructions] The ad instructions
+ * @apiParam {String} [photo] Photo
+ * @apiParam {String} [users_id] The user's id
+ * @apiParam {String} [celebrities_id] The celebrity's id
+ * @apiParam {String} [type] The ad's type
+ * @apiParam {String} [working_days] The number of required working days
+ * @apiParam {String} [date_from] The starting of the suggested date
+ * @apiParam {String} [date_to] The end of the suggested date
+ * @apiParam {String} [director] The director's name
+ * @apiParam {String} [locations_id] The location's id
+ * @apiParam {String} [orders_id] The order's id
+ * 
  * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data The ad details
+ * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {

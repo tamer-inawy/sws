@@ -39,11 +39,15 @@ router.get('/', locationsController.getAll);
  * @apiVersion 0.1.0
  * @apiGroup Ads
  * @apiPermission User
- * @apiParam {String} [urgent] Send 1 if the request is urgent
- * @apiParam {Number} price Price
- * @apiParam {String} request_type The location type. Send videos, locations, or events
+ * 
+ * @apiParam {String} location The location's lat, long
+ * @apiParam {String} name The location's name
+ * @apiParam {String} website The location's website
+ * @apiParam {String} address The location's address
+ * 
  * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data The created location details
+ * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
@@ -66,8 +70,10 @@ router.post('/',
  * @apiVersion 0.1.0
  * @apiGroup Ads
  * @apiPermission User, Celebrity
+ * 
  * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data The location details
+ * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
@@ -88,8 +94,15 @@ router.get('/:locationId', locationsController.get);
  * @apiVersion 0.1.0
  * @apiGroup Ads
  * @apiPermission User, Celebrity
+ * 
+ * @apiParam {String} [location] The location's lat, long
+ * @apiParam {String} [name] The location's name
+ * @apiParam {String} [website] The location's website
+ * @apiParam {String} [address] The location's address
+ * 
  * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data The updated location details
+ * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
