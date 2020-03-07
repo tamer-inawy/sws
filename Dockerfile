@@ -20,4 +20,3 @@ ENV NODE_ENV=develop
 
 EXPOSE 3000
 CMD [ "node", "server.js" ]
-# CMD tail -f /dev/null
