@@ -13,8 +13,10 @@ const celebritiesService = {
 
     return Celebrity.create(newCelebrity)
       .then(results => {
-        if (filePath)
-          fileUploadHelper.moveFile(filePath, `${config.celebrities.mediaPath}/${results.id}/`);
+        if (filePath && filePath.image)
+          fileUploadHelper.moveFile(filePath.image, `${config.celebrities.mediaPath}/${results.id}/`);
+        if (filePath && filePath.video)
+          fileUploadHelper.moveFile(filePath.video, `${config.celebrities.mediaPath}/${results.id}/`);
         const { password, ...resultsWitoutPassword } = results;
         return resultsWitoutPassword;
       })
@@ -40,7 +42,7 @@ const celebritiesService = {
     .then(results => {
       if (!results)
         return false;
-      const { password, ...resultsWitoutPassword } = results;
+      const { password, ...resultsWitoutPassword } = results[0];
       return resultsWitoutPassword;
     }),
 

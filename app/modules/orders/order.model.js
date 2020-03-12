@@ -15,10 +15,6 @@ const schema = {
       required: true,
     },
     {
-      name: 'request_type',
-      required: true
-    },
-    {
       name: 'created_at'
     },
   ]

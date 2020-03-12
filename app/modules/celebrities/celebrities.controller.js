@@ -3,18 +3,24 @@ const celebritiesService = require('./celebrities.service');
 const celebritiesController = {
 
   create: (req, res, next) => {
-    let filePath = false;
-    if (req.file) {
-      req.body.video = req.file.filename;
-      filePath = req.file.path;
+    let filePath = {};
+    if (req.files.image) {
+      req.body.image = req.files.image[0].filename;
+      filePath.image = req.files.image[0].path;
+    }
+    if (req.files.video) {
+      req.body.video = req.files.video[0].filename;
+      filePath.video = req.files.video[0].path;
     }
     req.body.admins_id = req.user.id;
 
     // handle validation 
     const validate = celebritiesService.validate(req.body);
     if (!validate.isValid) {
-      if (req.file)
-        celebritiesService.clearMedia(req.file.path);
+      if (req.files.image)
+        celebritiesService.clearMedia(req.files.image[0].path);
+      if (req.files.video)
+        celebritiesService.clearMedia(req.files.video[0].path);
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;

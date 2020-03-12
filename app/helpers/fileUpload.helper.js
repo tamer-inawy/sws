@@ -21,11 +21,15 @@ const getUploader = (path, mimetypes, fileSize) => {
 
   const fileFilter = (req, file, callBack) => {
     // validate the file type
-    if (mimetypes.indexOf(file.mimetype) !== -1) {
+    if (
+      (Array.isArray(mimetypes) && mimetypes.indexOf(file.mimetype) !== -1)
+      || (mimetypes[file.fieldname] && Array.isArray(mimetypes[file.fieldname]) && mimetypes[file.fieldname].indexOf(file.mimetype) !== -1)
+    ) {
       callBack(null, true);
     } else {
       callBack(new Error('Unsupported file type!'), false);
     }
+
   };
 
   const uploader = multer({
@@ -57,6 +61,12 @@ const fileUploadHelper = {
     createDir(path);
     const uploader = getUploader(path, mimetypes, fileSize);
     return uploader.single(field);
+  },
+
+  getMultiFieldsUploader(fields, path, mimetypes, fileSize) {
+    createDir(path);
+    const uploader = getUploader(path, mimetypes, fileSize);
+    return uploader.fields(fields);
   },
 
   moveFile(file, dir2) {

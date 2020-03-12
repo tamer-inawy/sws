@@ -120,18 +120,34 @@ const mysqlHelper = {
     });
   },
 
-  findJoin([primaryTable, primaryField], [secondaryTable, secondaryField, selectField], where) {
+  findManyToMany(
+    [primaryTable, primaryField],
+    [secondaryTable, secondaryField, secondarySelectFields, secondaryRelationField],
+    [thirdTable, thirdField, thirdSelectFields],
+    where
+  ) {
     return new Promise((resolve, reject) => {
-      const conn = connection.query(`SELECT \`${primaryTable}\`.*, \`${secondaryTable}\`.\`${selectField}\` FROM ${primaryTable} LEFT JOIN ${secondaryTable} ON ${primaryTable}.${primaryField} = ${secondaryTable}.${secondaryField} ${where ? 'WHERE ' + where : ''}`, (err, results) => {
-        if (err) {
-          console.log('error: ', err);
-          return reject(err);
-        }
-        else {
-          resolve(results);
-        }
-      });
-      console.log(conn.sql)
+      let selectText = `\`${primaryTable}\`.*, `;
+      secondarySelectFields = secondarySelectFields.map(v => `\`${secondaryTable}\`.\`${v}\``);
+      thirdSelectFields = thirdSelectFields.map(v => `\`${thirdTable}\`.\`${v}\``);
+      mergedSelectFields = secondarySelectFields.concat(thirdSelectFields);
+      selectText += mergedSelectFields.join(', ');
+
+      const conn = connection.query(
+        `SELECT ${selectText} FROM \`${primaryTable}\` 
+         LEFT JOIN \`${secondaryTable}\` ON \`${primaryTable}\`.\`${primaryField}\` = \`${secondaryTable}\`.\`${secondaryField}\` 
+         LEFT JOIN \`${thirdTable}\` ON \`${secondaryTable}\`.\`${secondaryRelationField}\` = \`${thirdTable}\`.\`${thirdField}\` 
+         ${where ? 'WHERE ' + where : ''}`,
+        (err, results) => {
+          if (err) {
+            console.log('error: ', err);
+            return reject(err);
+          }
+          else {
+            resolve(results);
+          }
+        });
+      // console.log(conn.sql);
     });
   },
 

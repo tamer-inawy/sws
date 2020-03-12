@@ -22,14 +22,12 @@ const router = express.Router();
  *          "id": 1,
  *          "urgent": 1,
  *          "price": 888.99,
- *          "request_type": "videos",
  *          "created_at": "2020-02-22T16:36:36.000Z"
  *        },
  *        {
  *          "id": 2,
  *          "urgent": 0,
  *          "price": 560.75,
- *          "request_type": "ads",
  *          "created_at": "2020-02-22T21:36:56.000Z"
  *        }
  *      ]
@@ -42,11 +40,13 @@ router.get('/', ordersController.getAll);
  * @apiVersion 0.1.0
  * @apiGroup Orders
  * @apiPermission Admin
+ * 
  * @apiParam {String} [urgent] Send 1 if the request is urgent
  * @apiParam {Number} price Price
- * @apiParam {String} request_type The order type. Send videos, ads, or events
+ * 
  * @apiSuccess {String} status The request status (success|failed)
  * @apiSuccess {Object} data The created order details
+ * 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
@@ -55,7 +55,6 @@ router.get('/', ordersController.getAll);
  *        "id": 1,
  *        "urgent": 1,
  *        "price": 888.99,
- *        "request_type": "videos",
  *        "created_at": "2020-02-22T16:36:36.000Z"
  *        }
  *    }
@@ -79,7 +78,6 @@ router.post('/',
  *        "id": 1,
  *        "urgent": 1,
  *        "price": 888.99,
- *        "request_type": "videos",
  *        "created_at": "2020-02-22T16:36:36.000Z"
  *        }
  *    }

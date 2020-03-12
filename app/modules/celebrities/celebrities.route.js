@@ -99,7 +99,12 @@ router.get('/', celebritiesController.getAll);
  */
 router.post('/',
   authMiddleware('Admin'),
-  fileUploadHelper.getSingleUploader(...videoUploaderConfis),
+  fileUploadHelper.getMultiFieldsUploader(
+    [{ name: 'image' }, { name: 'video' }],
+    config.celebrities.uploadsPath,
+    { video: config.video.allowedTypes, image:  config.image.allowedTypes},
+    { video: config.video.maxFileSize, image:  config.image.maxFileSize},
+  ),
   celebritiesController.create);
 
 /**
@@ -207,7 +212,12 @@ router.get('/:celebrityId', celebritiesController.get);
  */
 router.patch('/:celebrityId',
   authMiddleware('Celebrity'),
-  fileUploadHelper.getSingleUploader(...videoUploaderConfis),
+  fileUploadHelper.getMultiFieldsUploader(
+    [{ name: 'image' }, { name: 'video' }],
+    config.celebrities.uploadsPath,
+    { video: config.video.allowedTypes, image:  config.image.allowedTypes},
+    { video: config.video.maxFileSize, image:  config.image.maxFileSize},
+  ),
   celebritiesController.update);
 
 // TODO: implement delete celebrity

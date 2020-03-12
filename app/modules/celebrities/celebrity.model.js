@@ -43,6 +43,10 @@ const schema = {
       required: true
     },
     {
+      name: 'image',
+      required: true
+    },
+    {
       name: 'admins_id',
       required: true
     },
@@ -80,33 +84,44 @@ Celebrity.create = (newCelebrity) => {
 };
 
 Celebrity.getAll = () => {
-  return ormHelper.findJoin([schema.table, 'id'], ['celebrities_categories', 'celebrities_id', 'categories_id'])
+  return ormHelper.findManyToMany(
+    [schema.table, 'id'],
+    ['celebrities_categories', 'celebrities_id', [], 'categories_id'],
+    ['categories', 'id', ['category']]
+  )
     .then(results => {
       const resultsObj = {};
       for (const celebrity of results) {
-        if (resultsObj[celebrity.id]) {
-          resultsObj[celebrity.id].categories.push(celebrity.categories_id);
-        } else {
+        if (!resultsObj[celebrity.id]) {
           resultsObj[celebrity.id] = celebrity;
-          resultsObj[celebrity.id].categories = celebrity.categories_id ? [celebrity.categories_id] : [];
-          delete resultsObj[celebrity.id].categories_id;
+          resultsObj[celebrity.id].categories = celebrity.category ? [celebrity.category] : [];
+          delete resultsObj[celebrity.id].category;
+        } else {
+          resultsObj[celebrity.id].categories.push(celebrity.category);
         }
       }
+
+      // Convert the results' object to an array and return it
       return Object.keys(resultsObj).map(key => resultsObj[key]);
     });
 };
 
 Celebrity.get = (celebrityId) => {
-  return ormHelper.findJoin([schema.table, 'id'], ['celebrities_categories', 'celebrities_id', 'categories_id'], `${schema.table}.id=${celebrityId}`)
+  return ormHelper.findManyToMany(
+    [schema.table, 'id'],
+    ['celebrities_categories', 'celebrities_id', [], 'categories_id'],
+    ['categories', 'id', ['category']],
+    `${schema.table}.id=${celebrityId}`
+  )
     .then(results => {
       const resultsObj = {};
       for (const celebrity of results) {
-        if (resultsObj[celebrity.id] && celebrity.categories_id) {
-          resultsObj[celebrity.id].categories.push(celebrity.categories_id);
-        } else {
+        if (!resultsObj[celebrity.id]) {
           resultsObj[celebrity.id] = celebrity;
-          resultsObj[celebrity.id].categories = celebrity.categories_id ? [celebrity.categories_id] : [];
-          delete resultsObj[celebrity.id].categories_id;
+          resultsObj[celebrity.id].categories = celebrity.category ? [celebrity.category] : [];
+          delete resultsObj[celebrity.id].category;
+        } else {
+          resultsObj[celebrity.id].categories.push(celebrity.category);
         }
       }
       return Object.keys(resultsObj).map(key => resultsObj[key]);

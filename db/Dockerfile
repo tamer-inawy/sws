@@ -1,4 +1,4 @@
-FROM bitnami/mariadb:latest
+FROM bitnami/mariadb:10.3.22-debian-10-r38
 
 LABEL maintainer="tamer.inawy@gmail.com"
 
