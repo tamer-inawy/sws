@@ -31,8 +31,8 @@ const auth = roles => (req, res, next) => {
         break;
       case 'Celebrity':
         // Authorize the celebrity if it's in the roles array
-        // and omit the break statment to extend the celebrity with the user permissions.
         isAuthorized = roles.indexOf('Celebrity') !== -1;
+        break;
       case 'User':
         // Authorize the user if it's in the roles array.
         isAuthorized = roles.indexOf('User') !== -1;

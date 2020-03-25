@@ -63,8 +63,11 @@ const celebritiesService = {
 
     return Celebrity.update(celebrityId, updatedCelebrity)
       .then(results => {
-        if (filePath)
-          fileUploadHelper.moveFile(filePath, `${config.celebrities.mediaPath}/${celebrityId}/`);
+        console.log(filePath)
+        if (filePath && filePath.image)
+          fileUploadHelper.moveFile(filePath.image, `${config.celebrities.mediaPath}/${results.id}/`);
+        if (filePath && filePath.video)
+          fileUploadHelper.moveFile(filePath.video, `${config.celebrities.mediaPath}/${results.id}/`);
         return this.get(results.id)
       })
       .catch(err => {
