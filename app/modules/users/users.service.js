@@ -86,6 +86,7 @@ const usersService = {
         id: results.id,
         name: results.name,
         email: results.email,
+        image: results.image,
         role: 'User',
       };
       // create token
