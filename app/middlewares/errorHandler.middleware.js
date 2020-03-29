@@ -10,7 +10,7 @@ const errorHandler = (error, req, res, next) => {
 
   const response = {
     status: 'failed',
-    error: { message: error.message }
+    data: { message: error.message }
   };
 
   if (process.env.NODE_ENV === 'develop')
