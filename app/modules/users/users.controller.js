@@ -3,17 +3,17 @@ const usersService = require('./users.service');
 const usersController = {
 
   create: (req, res, next) => {
-    let filePath = false;
-    if (req.file) {
-      req.body.image = req.file.filename;
-      filePath = req.file.path;
+    let filePath = {};
+    if (req.files.image) {
+      req.body.image = req.files.image[0].filename;
+      filePath.image = req.files.image[0].path;
     }
 
     // handle validation 
     const validate = usersService.validate(req.body);
     if (!validate.isValid) {
-      if (req.file)
-        usersService.clearMedia(req.file.path);
+      if (filePath.image)
+        usersService.clearMedia(filePath.image);
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
@@ -78,26 +78,26 @@ const usersController = {
   update(req, res, next) {
     const userId = +req.params.userId;
 
+    let filePath = {};
+    if (req.files.image) {
+      req.body.image = req.files.image[0].filename;
+      filePath.image = req.files.image[0].path;
+    }
+
     // TODO: handle validation 
     let valid = true;
     if (!valid) {
-      if (req.file)
-        usersService.clearMedia(req.file.path);
+      if (filePath.image)
+        usersService.clearMedia(filePath.image);
       const err = new Error('Please provide a valid data!');
       throw err;
     }
     if (+req.user.id !== userId) {
-      if (req.file)
-        usersService.clearMedia(req.file.path);
+      if (filePath.image)
+        usersService.clearMedia(filePath.image);
       const err = new Error('Unauthorized request!');
       err.status = 403;
       throw err;
-    }
-
-    let filePath = false;
-    if (req.file) {
-      req.body.image = req.file.filename;
-      filePath = req.file.path;
     }
 
     usersService.update(userId, req.body, filePath)

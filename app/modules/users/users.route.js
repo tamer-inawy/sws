@@ -77,7 +77,12 @@ router.get('/',
  *    }
  */
 router.post('/',
-  fileUploadHelper.getSingleUploader(...imageUploaderConfis),
+  fileUploadHelper.getMultiFieldsUploader(
+    [{ name: 'image' }],
+    config.celebrities.uploadsPath,
+    { image: config.image.allowedTypes },
+    { image: config.image.maxFileSize },
+  ),
   usersController.create);
 
 /**
@@ -103,7 +108,7 @@ router.post('/',
  *    }
  */
 router.get('/:userId',
-usersController.get);
+  usersController.get);
 
 /**
  * @api {patch} /users/:id Update the user's details
@@ -142,7 +147,12 @@ usersController.get);
  */
 router.patch('/:userId',
   authMiddleware('User'),
-  fileUploadHelper.getSingleUploader(...imageUploaderConfis),
+  fileUploadHelper.getMultiFieldsUploader(
+    [{ name: 'image' }],
+    config.celebrities.uploadsPath,
+    { image: config.image.allowedTypes },
+    { image: config.image.maxFileSize },
+  ),
   usersController.update);
 
 // TODO: implement delete user

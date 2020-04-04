@@ -9,7 +9,7 @@ const celebritiesController = require('./celebrities.controller');
 const router = express.Router();
 const videoUploaderConfis = [
   'video',
-  config.celebrities.uploadsPath,
+  config.users.uploadsPath,
   config.video.allowedTypes,
   config.video.maxFileSize
 ];
@@ -101,7 +101,7 @@ router.post('/',
   authMiddleware('Admin'),
   fileUploadHelper.getMultiFieldsUploader(
     [{ name: 'image' }, { name: 'video' }],
-    config.celebrities.uploadsPath,
+    config.users.uploadsPath,
     { video: config.video.allowedTypes, image:  config.image.allowedTypes},
     { video: config.video.maxFileSize, image:  config.image.maxFileSize},
   ),
@@ -214,7 +214,7 @@ router.patch('/:celebrityId',
   authMiddleware('Celebrity'),
   fileUploadHelper.getMultiFieldsUploader(
     [{ name: 'image' }, { name: 'video' }],
-    config.celebrities.uploadsPath,
+    config.users.uploadsPath,
     { video: config.video.allowedTypes, image:  config.image.allowedTypes},
     { video: config.video.maxFileSize, image:  config.image.maxFileSize},
   ),

@@ -5,20 +5,7 @@ const schema = {
   table: 'celebrities',
   fields: [
     {
-      name: 'id'
-    },
-    {
-      name: 'name',
-      required: true
-    },
-    {
-      name: 'email',
-      required: true,
-      match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-    },
-    {
-      name: 'password',
-      required: true
+      name: 'id',
     },
     {
       name: 'video_price',
@@ -40,10 +27,6 @@ const schema = {
     },
     {
       name: 'video',
-      required: true
-    },
-    {
-      name: 'image',
       required: true
     },
     {
@@ -84,7 +67,7 @@ Celebrity.create = (newCelebrity) => {
 };
 
 Celebrity.getAll = () => {
-  return ormHelper.findManyToMany(
+  return ormHelper.findCelebrities(
     [schema.table, 'id'],
     ['celebrities_categories', 'celebrities_id', [], 'categories_id'],
     ['categories', 'id', ['category']]
@@ -107,7 +90,7 @@ Celebrity.getAll = () => {
 };
 
 Celebrity.get = (celebrityId) => {
-  return ormHelper.findManyToMany(
+  return ormHelper.findCelebrities(
     [schema.table, 'id'],
     ['celebrities_categories', 'celebrities_id', [], 'categories_id'],
     ['categories', 'id', ['category']],
@@ -133,7 +116,7 @@ Celebrity.update = (celebrityId, data) => {
 }
 
 Celebrity.findByEmail = (email) => {
-  return ormHelper.findOne(schema.table, { email: email });
+  return ormHelper.findOneCelebrity('users', schema.table, { email: email });
 };
 
 Celebrity.getVideos = (celebrityId) => {

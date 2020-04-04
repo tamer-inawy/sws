@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: eu.gcr.io/sylvan-flight-265211/sws_api:0.2.0
+          image: eu.gcr.io/sylvan-flight-265211/sws_api:0.5.0
           ports:
             - containerPort: 3000
           env:

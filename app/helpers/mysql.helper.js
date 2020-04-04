@@ -21,7 +21,7 @@ const mysqlHelper = {
           return reject(err);
         }
         else {
-          data.id = results.insertId;
+          data.id = data.id ? data.id : results.insertId;
           resolve(data);
         }
       });
@@ -101,6 +101,27 @@ const mysqlHelper = {
     });
   },
 
+  // TODO: Refactor with more generic method
+  findOneCelebrity(table1, table2, search) {
+    return new Promise((resolve, reject) => {
+      // prepare the params
+      const series = `${Object.keys(search).join(' = ? AND ')} = ? `;
+      const params = Object.values(search);
+      const query = `SELECT ${table1}.*, ${table2}.*, ${table2}.id as celebrity_id FROM ${table1}
+                            INNER JOIN ${table2} ON ${table1}.id = ${table2}.id WHERE ${series}`;
+
+      connection.query(query, params, (err, results) => {
+        if (err) {
+          console.log('error: ', err);
+          return reject(err);
+        }
+        else {
+          resolve(results[0]);
+        }
+      });
+    });
+  },
+
   findMulti(table, search) {
     return new Promise((resolve, reject) => {
       // prepare the params
@@ -147,7 +168,40 @@ const mysqlHelper = {
             resolve(results);
           }
         });
-      // console.log(conn.sql);
+      console.log(conn.sql);
+    });
+  },
+
+  // TODO: Refactor with more generic method
+  findCelebrities(
+    [primaryTable, primaryField],
+    [secondaryTable, secondaryField, secondarySelectFields, secondaryRelationField],
+    [thirdTable, thirdField, thirdSelectFields],
+    where
+  ) {
+    return new Promise((resolve, reject) => {
+      let selectText = `\`${primaryTable}\`.*, `;
+      secondarySelectFields = secondarySelectFields.map(v => `\`${secondaryTable}\`.\`${v}\``);
+      thirdSelectFields = thirdSelectFields.map(v => `\`${thirdTable}\`.\`${v}\``);
+      mergedSelectFields = secondarySelectFields.concat(thirdSelectFields);
+      selectText += mergedSelectFields.join(', ');
+
+      const conn = connection.query(
+        `SELECT ${selectText}, \`users\`.* FROM \`${primaryTable}\` 
+         LEFT JOIN \`${secondaryTable}\` ON \`${primaryTable}\`.\`${primaryField}\` = \`${secondaryTable}\`.\`${secondaryField}\` 
+         LEFT JOIN \`${thirdTable}\` ON \`${secondaryTable}\`.\`${secondaryRelationField}\` = \`${thirdTable}\`.\`${thirdField}\` 
+         INNER JOIN \`users\` on \`users\`.id = celebrities.id
+         ${where ? 'WHERE ' + where : ''}`,
+        (err, results) => {
+          if (err) {
+            console.log('error: ', err);
+            return reject(err);
+          }
+          else {
+            resolve(results);
+          }
+        });
+      console.log(conn.sql);
     });
   },
 

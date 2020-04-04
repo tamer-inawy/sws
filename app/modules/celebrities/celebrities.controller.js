@@ -33,12 +33,7 @@ const celebritiesController = {
         next();
       })
       .catch(err => {
-        if (err.errno === 1062) {
-          err.message = 'The email is already in use!';
-          err.status = 409;
-        } else {
-          err.message = err.message || 'Can\'t retrieve the data!';
-        }
+        err.message = err.message || 'Can\'t retrieve the data!';
 
         next(err);
       });

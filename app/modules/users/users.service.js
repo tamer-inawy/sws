@@ -13,14 +13,14 @@ const usersService = {
 
     return User.create(newUser)
       .then(results => {
-        if (filePath)
-          fileUploadHelper.moveFile(filePath, `${config.users.mediaPath}/${results.id}/`);
+        if (filePath && filePath.image)
+          fileUploadHelper.moveFile(filePath.image, `${config.users.mediaPath}/${results.id}/`);
         const { password, ...resultsWitoutPassword } = results;
         return resultsWitoutPassword;
       })
       .catch(err => {
-        if (filePath)
-          fileUploadHelper.deleteFile(filePath);
+        if (filePath && filePath.image)
+          fileUploadHelper.deleteFile(filePath.image);
         throw err;
       });
   },

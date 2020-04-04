@@ -5,24 +5,26 @@ const config = require(`../../config/${process.env.NODE_ENV}.config`);
 const { dataFormatHelper, validationHelper, fileUploadHelper } = require('../../helpers');
 // Import model
 const Celebrity = require('./celebrity.model');
+const userService = require('../users/users.service');
 
 const celebritiesService = {
   create(data, filePath) {
-    data.password = dataFormatHelper.passwordHash(data.password, config.saltRound);
-    const newCelebrity = new Celebrity(data);
+    return userService.create(data, filePath)
+      .then(user => {
+        const newCelebrity = new Celebrity({
+          id: user.id,
+          ...data
+        });
 
-    return Celebrity.create(newCelebrity)
-      .then(results => {
-        if (filePath && filePath.image)
-          fileUploadHelper.moveFile(filePath.image, `${config.celebrities.mediaPath}/${results.id}/`);
+        return Celebrity.create(newCelebrity)
+          .then(results => {
+            if (filePath && filePath.video)
+              fileUploadHelper.moveFile(filePath.video, `${config.users.mediaPath}/${results.id}/`);
+            return { ...user, ...results };
+          })
+      }).catch(err => {
         if (filePath && filePath.video)
-          fileUploadHelper.moveFile(filePath.video, `${config.celebrities.mediaPath}/${results.id}/`);
-        const { password, ...resultsWitoutPassword } = results;
-        return resultsWitoutPassword;
-      })
-      .catch(err => {
-        if (filePath)
-          fileUploadHelper.deleteFile(filePath);
+          fileUploadHelper.deleteFile(filePath.video);
         throw err;
       });
   },
@@ -60,14 +62,14 @@ const celebritiesService = {
 
     // Prevent email update
     delete updatedCelebrity.email;
-
+    // TODO: Fix the update to effect the user
     return Celebrity.update(celebrityId, updatedCelebrity)
       .then(results => {
         console.log(filePath)
         if (filePath && filePath.image)
-          fileUploadHelper.moveFile(filePath.image, `${config.celebrities.mediaPath}/${results.id}/`);
+          fileUploadHelper.moveFile(filePath.image, `${config.users.mediaPath}/${results.id}/`);
         if (filePath && filePath.video)
-          fileUploadHelper.moveFile(filePath.video, `${config.celebrities.mediaPath}/${results.id}/`);
+          fileUploadHelper.moveFile(filePath.video, `${config.users.mediaPath}/${results.id}/`);
         return this.get(results.id)
       })
       .catch(err => {
