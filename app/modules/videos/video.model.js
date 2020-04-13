@@ -13,7 +13,6 @@ const schema = {
     },
     {
       name: 'other_name',
-      required: true,
     },
     {
       name: 'instructions',
@@ -31,8 +30,7 @@ const schema = {
       required: true
     },
     {
-      name: 'orders_id',
-      required: true
+      name: 'orders_id'
     },
     {
       name: 'status',

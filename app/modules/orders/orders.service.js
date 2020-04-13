@@ -6,6 +6,7 @@ const { dataFormatHelper, validationHelper } = require('../../helpers');
 const Order = require('./order.model');
 
 const ordersService = {
+  // TODO: Check the price before creating the order
   create: data => Order.create(new Order(data)),
 
   validate: data => validationHelper.validate(Order.getSchema(), new Order(data)),
@@ -24,8 +25,12 @@ const ordersService = {
       });
   },
 
-  getOrdersByCelebrity(celebrityId) {
-    return Order.getOrdersByCelebrity(celebrityId);
+  getByCelebrity(celebrityId) {
+    return Order.getByCelebrity(celebrityId);
+  },
+
+  getByUser(userId) {
+    return Order.getByUser(userId);
   }
 
 };

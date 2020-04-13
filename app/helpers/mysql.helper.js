@@ -173,6 +173,27 @@ const mysqlHelper = {
   },
 
   // TODO: Refactor with more generic method
+  findLeftJoin(table1, table2, search) {
+    return new Promise((resolve, reject) => {
+      // prepare the params
+      const series = `${Object.keys(search).join(' = ? AND ')} = ? `;
+      const params = Object.values(search);
+      const query = `SELECT ${table1}.*, ${table2}.*, ${table2}.id as celebrity_id FROM ${table1}
+                            LEFT JOIN ${table2} ON ${table1}.id = ${table2}.id WHERE ${series}`;
+
+      connection.query(query, params, (err, results) => {
+        if (err) {
+          console.log('error: ', err);
+          return reject(err);
+        }
+        else {
+          resolve(results[0]);
+        }
+      });
+    });
+  },
+
+  // TODO: Refactor with more generic method
   findCelebrities(
     [primaryTable, primaryField],
     [secondaryTable, secondaryField, secondarySelectFields, secondaryRelationField],
@@ -188,10 +209,10 @@ const mysqlHelper = {
 
       const conn = connection.query(
         `SELECT ${selectText}, \`users\`.* FROM \`${primaryTable}\` 
-         LEFT JOIN \`${secondaryTable}\` ON \`${primaryTable}\`.\`${primaryField}\` = \`${secondaryTable}\`.\`${secondaryField}\` 
-         LEFT JOIN \`${thirdTable}\` ON \`${secondaryTable}\`.\`${secondaryRelationField}\` = \`${thirdTable}\`.\`${thirdField}\` 
-         INNER JOIN \`users\` on \`users\`.id = celebrities.id
-         ${where ? 'WHERE ' + where : ''}`,
+        LEFT JOIN \`${secondaryTable}\` ON \`${primaryTable}\`.\`${primaryField}\` = \`${secondaryTable}\`.\`${secondaryField}\` 
+        LEFT JOIN \`${thirdTable}\` ON \`${secondaryTable}\`.\`${secondaryRelationField}\` = \`${thirdTable}\`.\`${thirdField}\` 
+        INNER JOIN \`users\` on \`users\`.id = celebrities.id
+        ${where ? 'WHERE ' + where : ''}`,
         (err, results) => {
           if (err) {
             console.log('error: ', err);
@@ -204,6 +225,38 @@ const mysqlHelper = {
       console.log(conn.sql);
     });
   },
+
+  // TODO: Refactor with more generic method
+  findOrdersByUser(id) {
+    return new Promise((resolve, reject) => {
+      connection.query(`SELECT 
+        videos.name as user_name,
+        videos.other_name,
+        videos.users_id,
+        videos.celebrities_id,
+        videos.status,
+        orders.created_at,
+        users.name as celebrity_name,
+        users.image
+        FROM orders 
+        INNER JOIN videos ON
+        videos.orders_id = orders.id
+        INNER JOIN celebrities ON
+                            videos.celebrities_id = celebrities.id
+                          INNER JOIN users ON
+                            celebrities.id = users.id
+                          WHERE videos.users_id = ${id}`,
+        (err, results) => {
+          if (err) {
+            console.log('error: ', err);
+            return reject(err);
+          }
+          else {
+            resolve(results);
+          }
+        });
+    });
+  }
 
 };
 

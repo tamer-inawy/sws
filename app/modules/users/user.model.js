@@ -8,8 +8,7 @@ const schema = {
       name: 'id'
     },
     {
-      name: 'name',
-      required: true
+      name: 'name'
     },
     {
       name: 'email',
@@ -21,8 +20,7 @@ const schema = {
       required: true
     },
     {
-      name: 'phone',
-      required: true
+      name: 'phone'
     },
     {
       name: 'image'
@@ -62,7 +60,7 @@ User.update = (userId, data) => {
 }
 
 User.findByEmail = (email) => {
-  return ormHelper.findOne(schema.table, {email: email});
+  return ormHelper.findLeftJoin(schema.table, 'celebrities', {email: email});
 };
 
 module.exports = User;

@@ -68,6 +68,38 @@ const ordersController = {
 
   },
 
+  getByUser: (req, res, next) => {
+    const userId = +req.params.userId;
+
+    // handle validation
+    if (!userId) {
+      const err = new Error('Please provide a valid data!');
+      next(err);
+    }
+
+    if (req.user.id !== userId) {
+      const err = new Error('Not Authorized');
+      err.status = 401;
+      next(err);
+    }
+
+    return ordersService.getByUser(userId)
+      .then((order) => {
+        if (!order) {
+          const err = new Error('Can\'t retrieve the data!');
+          throw err;
+        }
+
+        res.locals.data = order;
+        next();
+      })
+      .catch(err => {
+        err.message = err.message || 'Can\'t retrieve the data!';
+        next(err);
+      });
+
+  },
+
   update(req, res, next) {
     const orderId = +req.params.orderId;
 
@@ -80,7 +112,7 @@ const ordersController = {
 
     ordersService.update(orderId, req.body)
       .then((order) => {
-        if(!order) {
+        if (!order) {
           err = new Error('Wrong order!');
           next(err);
         }

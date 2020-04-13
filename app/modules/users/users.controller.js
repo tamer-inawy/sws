@@ -4,7 +4,7 @@ const usersController = {
 
   create: (req, res, next) => {
     let filePath = {};
-    if (req.files.image) {
+    if (req.files && req.files.image) {
       req.body.image = req.files.image[0].filename;
       filePath.image = req.files.image[0].path;
     }
@@ -79,7 +79,7 @@ const usersController = {
     const userId = +req.params.userId;
 
     let filePath = {};
-    if (req.files.image) {
+    if (req.files && req.files.image) {
       req.body.image = req.files.image[0].filename;
       filePath.image = req.files.image[0].path;
     }

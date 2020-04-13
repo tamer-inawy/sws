@@ -49,11 +49,11 @@ Order.update = (orderId, data) => {
 }
 
 Order.getByCelebrity = (celebrityId) => {
-  return ormHelper.findMulti('orders', {celebrities_id: celebrityId});
+  return ormHelper.findMulti('orders', { celebrities_id: celebrityId });
 };
 
 Order.getByUser = (userId) => {
-  return ormHelper.findMulti('orders', {users_id: userId});
+  return ormHelper.findOrdersByUser(userId);
 };
 
 module.exports = Order;

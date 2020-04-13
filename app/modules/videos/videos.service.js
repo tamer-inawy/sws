@@ -4,9 +4,21 @@ const config = require(`../../config/${process.env.NODE_ENV}.config`);
 const { dataFormatHelper, validationHelper, fileUploadHelper } = require('../../helpers');
 // Import model
 const Video = require('./video.model');
+const Order = require('../orders/order.model');
+const orderService = require('../orders/orders.service');
 
 const videosService = {
-  create: data => Video.create(new Video(data)),
+  create: data => {
+    return orderService.create(new Order(data))
+      .then(order => {
+        console.log(order);
+        const video = new Video({
+          orders_id: order.id,
+          ...data
+        });
+        return Video.create(video)
+      })
+  },
 
   validate: data => validationHelper.validate(Video.getSchema(), new Video(data)),
 

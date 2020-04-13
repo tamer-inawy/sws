@@ -87,7 +87,7 @@ const usersService = {
         name: results.name,
         email: results.email,
         image: results.image,
-        role: 'User',
+        role: results.celebrity_id ? 'Celebrity' : 'User',
       };
       // create token
       data.token = jwt.sign(data, config.jwt.secrit, { expiresIn: config.jwt.expiration });
