@@ -17,7 +17,7 @@ const auth = roles => (req, res, next) => {
     // Decode and verify the token
     const token = req.headers.authorization.split(' ')[1];
     const decodedUserData = jwt.verify(token, config.jwt.secrit);
-    console.log('decoded', decodedUserData);
+    // console.log('decoded', decodedUserData);
 
     // Init a pointer with intial false state
     let isAuthorized = false;

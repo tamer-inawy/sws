@@ -10,7 +10,7 @@ const ordersController = {
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
-      next(err);
+      return next(err);
     }
 
     ordersService.create(req.body)

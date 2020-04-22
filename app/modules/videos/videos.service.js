@@ -9,6 +9,7 @@ const orderService = require('../orders/orders.service');
 
 const videosService = {
   create: data => {
+    console.log(data);
     return orderService.create(new Order(data))
       .then(order => {
         console.log(order);

@@ -178,7 +178,7 @@ const mysqlHelper = {
       // prepare the params
       const series = `${Object.keys(search).join(' = ? AND ')} = ? `;
       const params = Object.values(search);
-      const query = `SELECT ${table1}.*, ${table2}.*, ${table2}.id as celebrity_id FROM ${table1}
+      const query = `SELECT ${table2}.*, ${table1}.*, ${table2}.id as celebrity_id FROM ${table1}
                             LEFT JOIN ${table2} ON ${table1}.id = ${table2}.id WHERE ${series}`;
 
       connection.query(query, params, (err, results) => {
