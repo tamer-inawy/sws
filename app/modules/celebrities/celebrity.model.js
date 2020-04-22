@@ -112,7 +112,14 @@ Celebrity.get = (celebrityId) => {
 };
 
 Celebrity.update = (celebrityId, data) => {
-  return ormHelper.updateOne(schema.table, celebrityId, data);
+  const { categories, ...celebrity } = data;
+  return ormHelper.updateOne(schema.table, celebrityId, celebrity)
+    .then(results => {
+      if (categories && categories.length)
+        for (let category of categories)
+          ormHelper.create('celebrities_categories', { celebrities_id: celebrityId, categories_id: category });
+      return results;
+    });
 }
 
 Celebrity.findByEmail = (email) => {
