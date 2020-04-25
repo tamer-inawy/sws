@@ -231,22 +231,22 @@ const mysqlHelper = {
   findOrdersByUser(id) {
     return new Promise((resolve, reject) => {
       connection.query(`SELECT 
-                            videos.name as user_name,
-                            videos.other_name,
-                            videos.users_id,
-                            videos.celebrities_id,
-                            videos.status,
-                            orders.created_at,
-                            users.name as celebrity_name,
-                            users.image
-        FROM orders
-        INNER JOIN videos ON
-                            videos.orders_id = orders.id
-        INNER JOIN celebrities ON
-                            videos.celebrities_id = celebrities.id
-                          INNER JOIN users ON
-                            celebrities.id = users.id
-                          WHERE videos.users_id = ${id}`,
+                          videos.name as user_name,
+                          videos.other_name,
+                          videos.users_id,
+                          videos.celebrities_id,
+                          videos.status,
+                          orders.created_at,
+                          users.name as celebrity_name,
+                          users.image
+                        FROM orders
+                        INNER JOIN videos ON
+                          videos.orders_id = orders.id
+                        INNER JOIN celebrities ON
+                          videos.celebrities_id = celebrities.id
+                        INNER JOIN users ON
+                          celebrities.id = users.id
+                        WHERE videos.users_id = ${id}`,
         (err, results) => {
           if (err) {
             console.log('error: ', err);
