@@ -9,6 +9,7 @@ const adsRoutes = require('./modules/ads/ads.route');
 const locationsRoutes = require('./modules/locations/locations.route');
 const ordersRoutes = require('./modules/orders/orders.route');
 const categoriesRoutes = require('./modules/categories/categories.route');
+const eventsRoutes = require('./modules/events/events.route');
 const { responseMiddleware, errorHandlerMiddleware } = require('./middlewares');
 
 // Static routes
@@ -23,6 +24,7 @@ routers.use('/ads', adsRoutes, responseMiddleware);
 routers.use('/locations', locationsRoutes, responseMiddleware);
 routers.use('/orders', ordersRoutes, responseMiddleware);
 routers.use('/categories', categoriesRoutes, responseMiddleware);
+routers.use('/events', eventsRoutes, responseMiddleware);
 
 // Helthcheck route
 routers.get('/healthcheck', (req, res, next) => {

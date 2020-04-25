@@ -227,20 +227,21 @@ const mysqlHelper = {
   },
 
   // TODO: Refactor with more generic method
+  // TODO: Add events and ads tables
   findOrdersByUser(id) {
     return new Promise((resolve, reject) => {
       connection.query(`SELECT 
-        videos.name as user_name,
-        videos.other_name,
-        videos.users_id,
-        videos.celebrities_id,
-        videos.status,
-        orders.created_at,
-        users.name as celebrity_name,
-        users.image
-        FROM orders 
+                            videos.name as user_name,
+                            videos.other_name,
+                            videos.users_id,
+                            videos.celebrities_id,
+                            videos.status,
+                            orders.created_at,
+                            users.name as celebrity_name,
+                            users.image
+        FROM orders
         INNER JOIN videos ON
-        videos.orders_id = orders.id
+                            videos.orders_id = orders.id
         INNER JOIN celebrities ON
                             videos.celebrities_id = celebrities.id
                           INNER JOIN users ON
