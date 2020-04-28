@@ -256,6 +256,14 @@ CREATE TABLE IF NOT EXISTS `sws`.`celebrities_categories` (
 ENGINE = InnoDB;
 
 
+--
+-- Dumping data for table `admins`
+--
+
+INSERT INTO `admins` (`name`, `email`, `password`) VALUES
+('Init Admin', 'admin@sws.com', '$2b$10$IvZQ2SnNwm/Jinpz9zcnveoahQBSfJ0..UBja9h3hwef6PwDD/OWa');
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

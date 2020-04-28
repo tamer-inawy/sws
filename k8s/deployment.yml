@@ -7,21 +7,19 @@ spec:
   selector:
     matchLabels:
       app: sws
+
   template:
     metadata:
       labels:
         app: sws
     spec:
       containers:
-        - name: api
-          image: eu.gcr.io/sylvan-flight-265211/sws_api:0.5.0
-          ports:
-            - containerPort: 3000
-          env:
-            - name: NODE_ENV
-              value: develop
         - name: mariadb
-          image: eu.gcr.io/sylvan-flight-265211/sws_mariadb:0.2.0
+          image: us.gcr.io/propane-net-275411/sws_mariadb:0.3.0
+          # image: eu.gcr.io/sylvan-flight-265211/sws_mariadb:0.2.0
+          volumeMounts:
+            - mountPath: /bitnami
+              name: db-volume
           ports:
             - containerPort: 3306
           env:
@@ -31,3 +29,24 @@ spec:
               value: "no"
             - name: MYSQL_DATABASE
               value: sws
+          imagePullPolicy: Always
+
+        - name: api
+          image: us.gcr.io/propane-net-275411/sws_api:0.6.0
+          # image: eu.gcr.io/sylvan-flight-265211/sws_api:0.5.0
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: develop
+          imagePullPolicy: Always
+
+        - name: web
+          image: us.gcr.io/propane-net-275411/sws_web:0.1.0
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+
+      volumes:
+        - name: db-volume
+          emptyDir: {}
