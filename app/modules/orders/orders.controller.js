@@ -126,6 +126,38 @@ const ordersController = {
       });
   },
 
+  getByCelebrity: (req, res, next) => {
+    const celebrityId = +req.params.celebrityId;
+
+    // handle validation
+    if (!celebrityId) {
+      const err = new Error('Please provide a valid data!');
+      next(err);
+    }
+
+    if (req.user.id !== celebrityId) {
+      const err = new Error('Not Authorized');
+      err.status = 401;
+      next(err);
+    }
+
+    return ordersService.getByCelebrity(celebrityId)
+      .then((order) => {
+        if (!order) {
+          const err = new Error('Can\'t retrieve the data!');
+          throw err;
+        }
+
+        res.locals.data = order;
+        next();
+      })
+      .catch(err => {
+        err.message = err.message || 'Can\'t retrieve the data!';
+        next(err);
+      });
+
+  },
+
 };
 
 module.exports = ordersController;

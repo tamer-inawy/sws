@@ -236,7 +236,10 @@ const mysqlHelper = {
                           videos.users_id,
                           videos.celebrities_id,
                           videos.status,
+                          orders.id as order_id,
+                          orders.price,
                           orders.created_at,
+                          orders.urgent,
                           users.name as celebrity_name,
                           users.image
                         FROM orders
@@ -246,7 +249,8 @@ const mysqlHelper = {
                           videos.celebrities_id = celebrities.id
                         INNER JOIN users ON
                           celebrities.id = users.id
-                        WHERE videos.users_id = ${id}`,
+                        WHERE videos.users_id = ${id}
+                        ORDER BY orders.created_at DESC`,
         (err, results) => {
           if (err) {
             console.log('error: ', err);
@@ -257,7 +261,44 @@ const mysqlHelper = {
           }
         });
     });
-  }
+  },
+
+  // TODO: Refactor with more generic method
+  // TODO: Add events and ads tables
+  findOrdersByCelebrity(id) {
+    return new Promise((resolve, reject) => {
+      connection.query(`SELECT 
+                          videos.name as user_name,
+                          videos.other_name,
+                          videos.users_id,
+                          videos.celebrities_id,
+                          videos.status,
+                          orders.id as order_id,
+                          orders.price,
+                          orders.created_at,
+                          orders.urgent,
+                          users.name as celebrity_name,
+                          users.image
+                        FROM orders
+                        INNER JOIN videos ON
+                          videos.orders_id = orders.id
+                        INNER JOIN celebrities ON
+                          videos.celebrities_id = celebrities.id
+                        INNER JOIN users ON
+                          videos.users_id = users.id
+                        WHERE videos.celebrities_id = ${id}
+                        ORDER BY orders.urgent DESC, orders.created_at DESC`,
+        (err, results) => {
+          if (err) {
+            console.log('error: ', err);
+            return reject(err);
+          }
+          else {
+            resolve(results);
+          }
+        });
+    });
+  },
 
 };
 

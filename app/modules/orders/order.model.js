@@ -49,7 +49,7 @@ Order.update = (orderId, data) => {
 }
 
 Order.getByCelebrity = (celebrityId) => {
-  return ormHelper.findMulti('orders', { celebrities_id: celebrityId });
+  return ormHelper.findOrdersByCelebrity(celebrityId);
 };
 
 Order.getByUser = (userId) => {

@@ -63,10 +63,13 @@ router.post('/',
   authMiddleware('User'),
   ordersController.create);
 
-
 router.get('/user/:userId',
   authMiddleware(['User']),
   ordersController.getByUser);
+
+router.get('/celebrity/:celebrityId',
+  authMiddleware(['Celebrity']),
+  ordersController.getByCelebrity);
 
 /**
  * @api {get} /orders/:id Get order's details
