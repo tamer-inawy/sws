@@ -33,7 +33,9 @@ const router = express.Router();
  *      ]
  *    }
  */
-router.get('/', ordersController.getAll);
+router.get('/',
+  authMiddleware(['Admin']),
+  ordersController.getAll);
 
 /**
  * @api {post} /orders Create new order

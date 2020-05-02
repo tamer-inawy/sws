@@ -76,7 +76,12 @@ const mysqlHelper = {
         else {
           if (!results.affectedRows)
             resolve(false);
-          resolve(data);
+
+          this.getOne(table, id)
+            .then(updatedRow => {
+              console.log('updatedRow', updatedRow)
+              resolve(updatedRow);
+            });
         }
       });
     });
@@ -231,6 +236,7 @@ const mysqlHelper = {
   findOrdersByUser(id) {
     return new Promise((resolve, reject) => {
       connection.query(`SELECT 
+                          videos.id as video_id,
                           videos.name as user_name,
                           videos.other_name,
                           videos.users_id,
@@ -268,11 +274,13 @@ const mysqlHelper = {
   findOrdersByCelebrity(id) {
     return new Promise((resolve, reject) => {
       connection.query(`SELECT 
+                          videos.id as video_id,
                           videos.name as user_name,
                           videos.other_name,
                           videos.users_id,
                           videos.celebrities_id,
                           videos.status,
+                          videos.instructions,
                           orders.id as order_id,
                           orders.price,
                           orders.created_at,
@@ -287,6 +295,7 @@ const mysqlHelper = {
                         INNER JOIN users ON
                           videos.users_id = users.id
                         WHERE videos.celebrities_id = ${id}
+                          AND videos.status = 'PENDING'
                         ORDER BY orders.urgent DESC, orders.created_at DESC`,
         (err, results) => {
           if (err) {

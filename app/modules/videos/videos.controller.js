@@ -88,39 +88,40 @@ const videosController = {
       throw err;
     }
 
-    // TODO: Validate celebrity id
-    // if (+req.user.id !== videoId) {
-    //   if (req.file)
-    //     videosService.clearMedia(req.file.path);
-    //   const err = new Error('Unauthorized request!');
-    //   err.status = 403;
-    //   throw err;
-    // }
-
-    let filePath = false;
-    if (req.file) {
-      req.body.video = req.file.filename;
-      filePath = req.file.path;
-    }
-
-    videosService.update(videoId, req.body, filePath)
-      .then((video) => {
-        if(!video) {
-          err = new Error('Wrong video!');
-          next(err);
+    videosService.get(videoId)
+      .then(results => {
+        console.log(results)
+        // TODO: Validate celebrity id
+        if (+req.user.id !== results.celebrities_id) {
+          if (req.file)
+            videosService.clearMedia(req.file.path);
+          const err = new Error('Unauthorized request!');
+          err.status = 403;
+          throw err;
         }
-        res.locals.data = video;
-        next();
+
+        let filePath = false;
+        if (req.file) {
+          req.body.video = req.file.filename;
+          filePath = req.file.path;
+          req.body.status = 'APPROVED';
+        }
+
+        videosService.update(videoId, req.body, filePath)
+          .then((video) => {
+            if (!video) {
+              err = new Error('Wrong video!');
+              next(err);
+            }
+            res.locals.data = video;
+            next();
+          })
+          .catch(err => {
+            console.log(err);
+            err.message = err.message || 'Can\'t retrieve the data!';
+            next(err);
+          });
       })
-      .catch(err => {
-        console.log(err);
-        if (err.errno === 1062) {
-          err.message = 'The email is already in use!';
-        } else {
-          err.message = err.message || 'Can\'t retrieve the data!';
-        }
-        next(err);
-      });
   },
 
 };
