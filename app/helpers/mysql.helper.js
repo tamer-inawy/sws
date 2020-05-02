@@ -273,30 +273,37 @@ const mysqlHelper = {
   // TODO: Add events and ads tables
   findOrdersByCelebrity(id) {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT 
+      const conn = connection.query(`SELECT 
                           videos.id as video_id,
-                          videos.name as user_name,
                           videos.other_name,
-                          videos.users_id,
-                          videos.celebrities_id,
-                          videos.status,
-                          videos.instructions,
+                          IF(ISNULL(videos.id), IF(ISNULL(events.id), IF(ISNULL(ads.id), null, 'ad'), 'event'), 'video') as order_type,
+                          IFNULL(videos.users_id, IFNULL(events.users_id, ads.users_id)) as user_id,
+                          IFNULL(videos.name, IFNULL(videos.other_name, (SELECT name FROM users WHERE id = user_id))) as user_name,
+                          IFNULL(videos.status, IFNULL(events.status, ads.status)) as status,
+                          IFNULL(videos.instructions, events.description) as instructions,
+                          events.id as event_id,
                           orders.id as order_id,
                           orders.price,
                           orders.created_at,
                           orders.urgent,
+                          ads.id as ad_id,
+                          celebrities.id as celebrities_id,
                           users.name as celebrity_name,
                           users.image
                         FROM orders
-                        INNER JOIN videos ON
+                        LEFT JOIN events ON
+                          events.orders_id = orders.id
+                        LEFT JOIN videos ON
                           videos.orders_id = orders.id
+                        LEFT JOIN ads ON
+                          ads.orders_id = orders.id
                         INNER JOIN celebrities ON
-                          videos.celebrities_id = celebrities.id
+                          events.celebrities_id = celebrities.id OR videos.celebrities_id = celebrities.id OR ads.celebrities_id = celebrities.id
                         INNER JOIN users ON
-                          videos.users_id = users.id
-                        WHERE videos.celebrities_id = ${id}
-                          AND videos.status = 'PENDING'
-                        ORDER BY orders.urgent DESC, orders.created_at DESC`,
+                          videos.users_id = users.id OR events.users_id = users.id OR ads.users_id = users.id
+                        WHERE celebrities.id = ?
+                          AND (videos.status = 'PENDING' OR events.status = 'PENDING' OR ads.status = 'PENDING')
+                        ORDER BY orders.urgent DESC, orders.created_at DESC`, id,
         (err, results) => {
           if (err) {
             console.log('error: ', err);
@@ -306,6 +313,7 @@ const mysqlHelper = {
             resolve(results);
           }
         });
+      console.log(conn.sql);
     });
   },
 
