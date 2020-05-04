@@ -62,7 +62,7 @@ router.get('/', locationsController.getAll);
  *    }
  */
 router.post('/',
-  authMiddleware('User'),
+  authMiddleware(['User', 'Celebrity']),
   locationsController.create);
 
 /**

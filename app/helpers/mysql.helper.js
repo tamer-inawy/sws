@@ -173,7 +173,7 @@ const mysqlHelper = {
             resolve(results);
           }
         });
-      console.log(conn.sql);
+      // console.log(conn.sql);
     });
   },
 
@@ -227,7 +227,7 @@ const mysqlHelper = {
             resolve(results);
           }
         });
-      console.log(conn.sql);
+      // console.log(conn.sql);
     });
   },
 
@@ -235,28 +235,36 @@ const mysqlHelper = {
   // TODO: Add events and ads tables
   findOrdersByUser(id) {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT 
-                          videos.id as video_id,
-                          videos.name as user_name,
-                          videos.other_name,
-                          videos.users_id,
-                          videos.celebrities_id,
-                          videos.status,
+      const conn = connection.query(`SELECT 
                           orders.id as order_id,
                           orders.price,
                           orders.created_at,
                           orders.urgent,
+                          IF(ISNULL(videos.id), IF(ISNULL(events.id), IF(ISNULL(ads.id), null, 'ad'), 'event'), 'video') as order_type,
+                          IFNULL(videos.users_id, IFNULL(events.users_id, ads.users_id)) as user_id,
+                          IFNULL(videos.name, IFNULL(videos.other_name, (SELECT name FROM users WHERE id = user_id))) as user_name,
+                          IFNULL(videos.status, IFNULL(events.status, ads.status)) as status,
+                          videos.id as video_id,
+                          videos.other_name,
+                          events.id as event_id,
+                          ads.id as ad_id,
+                          celebrities.id as celebrity_id,
                           users.name as celebrity_name,
                           users.image
                         FROM orders
-                        INNER JOIN videos ON
+                        LEFT JOIN events ON
+                          events.orders_id = orders.id
+                        LEFT JOIN videos ON
                           videos.orders_id = orders.id
+                        LEFT JOIN ads ON
+                          ads.orders_id = orders.id
                         INNER JOIN celebrities ON
-                          videos.celebrities_id = celebrities.id
+                          events.celebrities_id = celebrities.id OR videos.celebrities_id = celebrities.id OR ads.celebrities_id = celebrities.id
                         INNER JOIN users ON
                           celebrities.id = users.id
-                        WHERE videos.users_id = ${id}
-                        ORDER BY orders.created_at DESC`,
+                        WHERE 
+                        videos.users_id = ? OR events.users_id = ? OR ads.users_id = ?
+                        ORDER BY orders.created_at DESC`, Array(3).fill(id),
         (err, results) => {
           if (err) {
             console.log('error: ', err);
@@ -266,6 +274,7 @@ const mysqlHelper = {
             resolve(results);
           }
         });
+      // console.log(conn.sql);
     });
   },
 
@@ -278,16 +287,18 @@ const mysqlHelper = {
                           videos.other_name,
                           IF(ISNULL(videos.id), IF(ISNULL(events.id), IF(ISNULL(ads.id), null, 'ad'), 'event'), 'video') as order_type,
                           IFNULL(videos.users_id, IFNULL(events.users_id, ads.users_id)) as user_id,
-                          IFNULL(videos.name, IFNULL(videos.other_name, (SELECT name FROM users WHERE id = user_id))) as user_name,
+                          (SELECT name FROM users WHERE id = user_id) as user_name,
                           IFNULL(videos.status, IFNULL(events.status, ads.status)) as status,
                           IFNULL(videos.instructions, events.description) as instructions,
                           events.id as event_id,
+                          events.event_date,
+                          events.locations_id as location_id,
+                          ads.id as ad_id,
+                          celebrities.id as celebrities_id,
                           orders.id as order_id,
                           orders.price,
                           orders.created_at,
                           orders.urgent,
-                          ads.id as ad_id,
-                          celebrities.id as celebrities_id,
                           users.name as celebrity_name,
                           users.image
                         FROM orders
@@ -303,6 +314,7 @@ const mysqlHelper = {
                           videos.users_id = users.id OR events.users_id = users.id OR ads.users_id = users.id
                         WHERE celebrities.id = ?
                           AND (videos.status = 'PENDING' OR events.status = 'PENDING' OR ads.status = 'PENDING')
+                          OR (videos.status = 'CHANGED' OR events.status = 'CHANGED' OR ads.status = 'CHANGED')
                         ORDER BY orders.urgent DESC, orders.created_at DESC`, id,
         (err, results) => {
           if (err) {
@@ -313,7 +325,7 @@ const mysqlHelper = {
             resolve(results);
           }
         });
-      console.log(conn.sql);
+      // console.log(conn.sql);
     });
   },
 
