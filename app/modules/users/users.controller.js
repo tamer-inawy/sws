@@ -17,7 +17,7 @@ const usersController = {
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
-      next(err);
+      return next(err);
     }
 
     usersService.create(req.body, filePath)
@@ -33,7 +33,7 @@ const usersController = {
           err.message = err.message || 'Can\'t retrieve the data!';
         }
 
-        next(err);
+        return next(err);
       });
   },
 
@@ -45,7 +45,7 @@ const usersController = {
       })
       .catch((err) => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -55,7 +55,7 @@ const usersController = {
     // handle validation
     if (!userId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     return usersService.get(userId)
@@ -70,7 +70,7 @@ const usersController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },
@@ -112,7 +112,7 @@ const usersController = {
         } else {
           err.message = err.message || 'Can\'t retrieve the data!';
         }
-        next(err);
+        return next(err);
       });
   },
 
@@ -135,7 +135,7 @@ const usersController = {
       .catch(err => {
         console.log(err);
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   }
 

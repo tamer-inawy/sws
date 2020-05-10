@@ -13,7 +13,7 @@ const locationsController = {
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
-      next(err);
+      return next(err);
     }
 
     locationsService.create(req.body)
@@ -23,7 +23,7 @@ const locationsController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -35,7 +35,7 @@ const locationsController = {
       })
       .catch((err) => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -45,7 +45,7 @@ const locationsController = {
     // handle validation
     if (!locationId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     return locationsService.get(locationId)
@@ -60,7 +60,7 @@ const locationsController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },
@@ -81,7 +81,7 @@ const locationsController = {
       .then((location) => {
         if(!location) {
           err = new Error('Wrong location!');
-          next(err);
+          return next(err);
         }
         res.locals.data = location;
         next();
@@ -89,7 +89,7 @@ const locationsController = {
       .catch(err => {
         console.log(err);
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 

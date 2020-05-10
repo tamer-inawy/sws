@@ -26,7 +26,7 @@ const ordersController = {
           err.message = err.message || 'Can\'t retrieve the data!';
         }
 
-        next(err);
+        return next(err);
       });
   },
 
@@ -38,7 +38,7 @@ const ordersController = {
       })
       .catch((err) => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -48,7 +48,7 @@ const ordersController = {
     // handle validation
     if (!orderId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     return ordersService.get(orderId)
@@ -63,7 +63,7 @@ const ordersController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },
@@ -74,13 +74,13 @@ const ordersController = {
     // handle validation
     if (!userId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     if (req.user.id !== userId) {
       const err = new Error('Not Authorized');
       err.status = 401;
-      next(err);
+      return next(err);
     }
 
     return ordersService.getByUser(userId)
@@ -95,7 +95,7 @@ const ordersController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },
@@ -114,7 +114,7 @@ const ordersController = {
       .then((order) => {
         if (!order) {
           err = new Error('Wrong order!');
-          next(err);
+          return next(err);
         }
         res.locals.data = order;
         next();
@@ -122,7 +122,7 @@ const ordersController = {
       .catch(err => {
         console.log(err);
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -132,13 +132,13 @@ const ordersController = {
     // handle validation
     if (!celebrityId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     if (req.user.id !== celebrityId) {
       const err = new Error('Not Authorized');
       err.status = 401;
-      next(err);
+      return next(err);
     }
 
     return ordersService.getByCelebrity(celebrityId)
@@ -153,7 +153,7 @@ const ordersController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },

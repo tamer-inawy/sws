@@ -18,7 +18,7 @@ const videosController = {
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
-      next(err);
+      return next(err);
     }
 
     videosService.create(req.body, filePath)
@@ -34,7 +34,7 @@ const videosController = {
           err.message = err.message || 'Can\'t retrieve the data!';
         }
 
-        next(err);
+        return next(err);
       });
   },
 
@@ -46,7 +46,7 @@ const videosController = {
       })
       .catch((err) => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -56,7 +56,7 @@ const videosController = {
     // handle validation
     if (!videoId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     return videosService.get(videoId)
@@ -71,7 +71,7 @@ const videosController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },
@@ -104,14 +104,14 @@ const videosController = {
         if (req.file) {
           req.body.video = req.file.filename;
           filePath = req.file.path;
-          req.body.status = 'APPROVED';
+          req.body.status = 'DONE';
         }
 
         videosService.update(videoId, req.body, filePath)
           .then((video) => {
             if (!video) {
               err = new Error('Wrong video!');
-              next(err);
+              return next(err);
             }
             res.locals.data = video;
             next();
@@ -119,7 +119,7 @@ const videosController = {
           .catch(err => {
             console.log(err);
             err.message = err.message || 'Can\'t retrieve the data!';
-            next(err);
+            return next(err);
           });
       })
   },

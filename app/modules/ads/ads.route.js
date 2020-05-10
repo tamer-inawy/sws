@@ -206,7 +206,7 @@ router.get('/:adId', adsController.get);
  *    }
  */
 router.patch('/:adId',
-  authMiddleware('Celebrity'),
+  authMiddleware(['User', 'Celebrity']),
   adsController.update);
 
 // TODO: implement delete ad

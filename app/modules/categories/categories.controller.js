@@ -16,7 +16,7 @@ const categoriesController = {
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
-      next(err);
+      return next(err);
     }
 
     categoriesService.create(req.body)
@@ -32,7 +32,7 @@ const categoriesController = {
           err.message = err.message || 'Can\'t retrieve the data!';
         }
 
-        next(err);
+        return next(err);
       });
   },
 
@@ -44,7 +44,7 @@ const categoriesController = {
       })
       .catch((err) => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -54,7 +54,7 @@ const categoriesController = {
     // handle validation
     if (!categoryId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     return categoriesService.get(categoryId)
@@ -69,7 +69,7 @@ const categoriesController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },
@@ -88,7 +88,7 @@ const categoriesController = {
       .then((category) => {
         if(!category) {
           err = new Error('Wrong category!');
-          next(err);
+          return next(err);
         }
         res.locals.data = category;
         next();
@@ -96,7 +96,7 @@ const categoriesController = {
       .catch(err => {
         console.log(err);
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 

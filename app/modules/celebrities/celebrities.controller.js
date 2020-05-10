@@ -24,7 +24,7 @@ const celebritiesController = {
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
-      next(err);
+      return next(err);
     }
 
     celebritiesService.create(req.body, filePath)
@@ -35,7 +35,7 @@ const celebritiesController = {
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
 
-        next(err);
+        return next(err);
       });
   },
 
@@ -47,7 +47,7 @@ const celebritiesController = {
       })
       .catch((err) => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -57,7 +57,7 @@ const celebritiesController = {
     // handle validation
     if (!celebrityId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     return celebritiesService.get(celebrityId)
@@ -72,7 +72,7 @@ const celebritiesController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },
@@ -121,7 +121,7 @@ const celebritiesController = {
         } else {
           err.message = err.message || 'Can\'t retrieve the data!';
         }
-        next(err);
+        return next(err);
       });
   },
 
@@ -144,7 +144,7 @@ const celebritiesController = {
       .catch(err => {
         console.log(err);
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 

@@ -244,9 +244,12 @@ const mysqlHelper = {
                           IFNULL(videos.users_id, IFNULL(events.users_id, ads.users_id)) as user_id,
                           IFNULL(videos.name, IFNULL(videos.other_name, (SELECT name FROM users WHERE id = user_id))) as user_name,
                           IFNULL(videos.status, IFNULL(events.status, ads.status)) as status,
+                          IFNULL(videos.instructions, events.description) as instructions,
                           videos.id as video_id,
                           videos.other_name,
                           events.id as event_id,
+                          events.event_date,
+                          events.locations_id as location_id,
                           ads.id as ad_id,
                           celebrities.id as celebrity_id,
                           users.name as celebrity_name,
@@ -264,7 +267,7 @@ const mysqlHelper = {
                           celebrities.id = users.id
                         WHERE 
                         videos.users_id = ? OR events.users_id = ? OR ads.users_id = ?
-                        ORDER BY orders.created_at DESC`, Array(3).fill(id),
+                        ORDER BY status ASC, orders.created_at DESC`, Array(3).fill(id),
         (err, results) => {
           if (err) {
             console.log('error: ', err);
@@ -289,11 +292,17 @@ const mysqlHelper = {
                           IFNULL(videos.users_id, IFNULL(events.users_id, ads.users_id)) as user_id,
                           (SELECT name FROM users WHERE id = user_id) as user_name,
                           IFNULL(videos.status, IFNULL(events.status, ads.status)) as status,
-                          IFNULL(videos.instructions, events.description) as instructions,
+                          IFNULL(videos.instructions, IFNULL(events.description, ads.instructions)) as instructions,
                           events.id as event_id,
                           events.event_date,
                           events.locations_id as location_id,
                           ads.id as ad_id,
+                          ads.company,
+                          ads.type as ad_type,
+                          ads.date_from,
+                          ads.date_to,
+                          ads.working_days,
+                          ads.director,
                           celebrities.id as celebrities_id,
                           orders.id as order_id,
                           orders.price,
@@ -315,6 +324,7 @@ const mysqlHelper = {
                         WHERE celebrities.id = ?
                           AND (videos.status = 'PENDING' OR events.status = 'PENDING' OR ads.status = 'PENDING')
                           OR (videos.status = 'CHANGED' OR events.status = 'CHANGED' OR ads.status = 'CHANGED')
+                          OR (videos.status = 'APPROVED' OR events.status = 'APPROVED' OR ads.status = 'APPROVED')
                         ORDER BY orders.urgent DESC, orders.created_at DESC`, id,
         (err, results) => {
           if (err) {

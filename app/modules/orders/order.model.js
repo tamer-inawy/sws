@@ -26,6 +26,7 @@ const Order = function (order) {
   for (const field of schema.fields) {
     if (order[field.name])
       this[field.name] = order[field.name];
+    console.log(field.name, order[field.name])
   }
 };
 
@@ -33,6 +34,7 @@ const Order = function (order) {
 Order.getSchema = () => [...schema.fields];
 
 Order.create = (newOrder) => {
+  console.log('newOrder', newOrder)
   return ormHelper.create(schema.table, newOrder);
 };
 

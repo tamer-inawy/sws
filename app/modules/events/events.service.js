@@ -3,7 +3,7 @@ const Event = require('./event.model');
 
 // Import utilities
 const config = require(`../../config/${process.env.NODE_ENV}.config`);
-const { validationHelper } = require('../../helpers');
+const { validationHelper, fileUploadHelper } = require('../../helpers');
 const orderService = require('../orders/orders.service');
 const Order = require('../orders/order.model');
 
@@ -20,7 +20,7 @@ const eventsService = {
             ...data
           })
         )
-      })
+      });
   },
 
   validate: data => validationHelper.validate(Event.getSchema(), new Event(data)),
@@ -45,7 +45,11 @@ const eventsService = {
 
   getByUser(userId) {
     return Event.getByUser(userId);
-  }
+  },
+
+  clearMedia(filePath) {
+    fileUploadHelper.deleteFile(filePath);
+  },
 
 };
 

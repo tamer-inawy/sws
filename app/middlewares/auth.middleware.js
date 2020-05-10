@@ -51,7 +51,7 @@ const auth = roles => (req, res, next) => {
   } catch (err) {
     err.message = err.message || 'Unauthorized request!';
     err.status = err.status || 401;
-    next(err);
+    return next(err);
   }
   next();
 };

@@ -3,8 +3,16 @@ const express = require('express');
 const { authMiddleware } = require('../../middlewares');
 // Import controller
 const eventsController = require('./events.controller');
+const config = require(`../../config/${process.env.NODE_ENV}.config`);
+const { fileUploadHelper } = require('../../helpers');
 
 const router = express.Router();
+const imageUploaderConfgis = [
+  'image',
+  config.celebrities.uploadsPath,
+  config.image.allowedTypes,
+  config.image.maxFileSize
+];
 
 router.get('/', eventsController.getAll);
 
@@ -23,6 +31,7 @@ router.get('/:eventId',
 
 router.patch('/:eventId',
   authMiddleware(['User', 'Celebrity']),
+  fileUploadHelper.getSingleUploader(...imageUploaderConfgis),
   eventsController.update);
 
 // TODO: implement delete event

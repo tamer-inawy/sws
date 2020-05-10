@@ -13,7 +13,7 @@ const adsController = {
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
-      next(err);
+      return next(err);
     }
 
     adsService.create(req.body)
@@ -23,7 +23,7 @@ const adsController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -35,7 +35,7 @@ const adsController = {
       })
       .catch((err) => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -45,7 +45,7 @@ const adsController = {
     // handle validation
     if (!adId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     return adsService.get(adId)
@@ -60,7 +60,7 @@ const adsController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },
@@ -81,7 +81,7 @@ const adsController = {
       .then((ad) => {
         if(!ad) {
           err = new Error('Wrong ad!');
-          next(err);
+          return next(err);
         }
         res.locals.data = ad;
         next();
@@ -89,7 +89,7 @@ const adsController = {
       .catch(err => {
         console.log(err);
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 

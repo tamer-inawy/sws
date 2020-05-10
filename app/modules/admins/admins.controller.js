@@ -9,7 +9,7 @@ const adminsController = {
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
-      next(err);
+      return next(err);
     }
 
     adminsService.create(req.body)
@@ -25,7 +25,7 @@ const adminsController = {
           err.message = err.message || 'Can\'t retrieve the data!';
         }
 
-        next(err);
+        return next(err);
       });
   },
 
@@ -37,7 +37,7 @@ const adminsController = {
       })
       .catch((err) => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -47,7 +47,7 @@ const adminsController = {
     // handle validation
     if (!adminId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     return adminsService.get(adminId)
@@ -62,7 +62,7 @@ const adminsController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },
@@ -94,7 +94,7 @@ const adminsController = {
         } else {
           err.message = err.message || 'Can\'t retrieve the data!';
         }
-        next(err);
+        return next(err);
       });
   },
 
@@ -117,7 +117,7 @@ const adminsController = {
       .catch(err => {
         console.log(err);
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   }
 

@@ -10,7 +10,7 @@ const eventsController = {
       const err = new Error('Please provide a valid data!');
       err.field = validate.field;
       err.rule = validate.rule;
-      next(err);
+      return next(err);
     }
 
     eventsService.create(req.body)
@@ -19,14 +19,8 @@ const eventsController = {
         next();
       })
       .catch(err => {
-        if (err.errno === 1062) {
-          err.message = 'The email is already in use!';
-          err.status = 409;
-        } else {
-          err.message = err.message || 'Can\'t retrieve the data!';
-        }
-
-        next(err);
+        err.message = err.message || 'Can\'t retrieve the data!';
+        return next(err);
       });
   },
 
@@ -38,7 +32,7 @@ const eventsController = {
       })
       .catch((err) => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
   },
 
@@ -48,7 +42,7 @@ const eventsController = {
     // handle validation
     if (!eventId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     return eventsService.get(eventId)
@@ -63,7 +57,7 @@ const eventsController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },
@@ -74,13 +68,13 @@ const eventsController = {
     // handle validation
     if (!userId) {
       const err = new Error('Please provide a valid data!');
-      next(err);
+      return next(err);
     }
 
     if (req.user.id !== userId) {
       const err = new Error('Not Authorized');
       err.status = 401;
-      next(err);
+      return next(err);
     }
 
     return eventsService.getByUser(userId)
@@ -95,7 +89,7 @@ const eventsController = {
       })
       .catch(err => {
         err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
+        return next(err);
       });
 
   },
@@ -106,24 +100,45 @@ const eventsController = {
     // TODO: handle validation 
     let valid = true;
     if (!valid) {
+      if (req.file)
+        eventsService.clearMedia(req.file.path);
       const err = new Error('Please provide a valid data!');
       throw err;
     }
 
-    eventsService.update(eventId, req.body)
-      .then((event) => {
-        if (!event) {
-          err = new Error('Wrong event!');
-          next(err);
+    eventsService.get(eventId)
+      .then(results => {
+        // Validate celebrity id
+        if (+req.user.id !== results.celebrities_id && req.file) {
+          eventsService.clearMedia(req.file.path);
+          const err = new Error('Unauthorized request!');
+          err.status = 403;
+          throw err;
         }
-        res.locals.data = event;
-        next();
+
+        let filePath = false;
+        if (req.file) {
+          req.body.image = req.file.filename;
+          req.body.status = 'DONE';
+          filePath = req.file.path;
+        }
+
+        eventsService.update(eventId, req.body)
+          .then((event) => {
+            if (!event) {
+              err = new Error('Wrong event!');
+              return next(err);
+            }
+            res.locals.data = event;
+            next();
+          })
+          .catch(err => {
+            console.log(err);
+            err.message = err.message || 'Can\'t retrieve the data!';
+            return next(err);
+          });
       })
-      .catch(err => {
-        console.log(err);
-        err.message = err.message || 'Can\'t retrieve the data!';
-        next(err);
-      });
+
   },
 
 };

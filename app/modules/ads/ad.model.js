@@ -48,13 +48,12 @@ const schema = {
     {
       name: 'director',
     },
-    {
-      name: 'locations_id',
-      required: true
-    },
+    // {
+    //   name: 'locations_id',
+    //   required: true
+    // },
     {
       name: 'orders_id',
-      required: true
     },
   ]
 
