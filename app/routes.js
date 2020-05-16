@@ -11,6 +11,7 @@ const ordersRoutes = require('./modules/orders/orders.route');
 const categoriesRoutes = require('./modules/categories/categories.route');
 const eventsRoutes = require('./modules/events/events.route');
 const { responseMiddleware, errorHandlerMiddleware } = require('./middlewares');
+const corsProxy = require('./proxy');
 
 // Static routes
 routers.use(express.static('public'));
@@ -25,6 +26,7 @@ routers.use('/locations', locationsRoutes, responseMiddleware);
 routers.use('/orders', ordersRoutes, responseMiddleware);
 routers.use('/categories', categoriesRoutes, responseMiddleware);
 routers.use('/events', eventsRoutes, responseMiddleware);
+routers.use('/maps', corsProxy);
 
 // Helthcheck route
 routers.get('/healthcheck', (req, res, next) => {
@@ -34,7 +36,7 @@ routers.get('/healthcheck', (req, res, next) => {
   next();
 }, responseMiddleware);
 
-// Not found error handling
+// Not found 404 error handling
 routers.use((req, res, next) => {
   const error = new Error('Request not found');
   error.status = 404;
