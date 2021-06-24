@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sws-qa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sws-qa
+  serviceName: "sws-qa"
+  updateStrategy:
+    type: RollingUpdate
+
+  template:
+    metadata:
+      labels:
+        app: sws-qa
+    spec:
+      containers:
+        - name: mariadb-qa
+          image: us.gcr.io/propane-net-275411/sws_mariadb:0.1.0
+          volumeMounts:
+            - mountPath: /bitnami
+              name: db-pvc
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+          ports:
+            - containerPort: 3306
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "no"
+            - name: MYSQL_DATABASE
+              value: sws
+          imagePullPolicy: Always
+
+        - name: api-qa
+          image: us.gcr.io/propane-net-275411/sws_api:0.1.0qa
+          volumeMounts:
+            - name: api-pvc
+              mountPath: /usr/src/app/public
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: develop
+          imagePullPolicy: Always
+
+        - name: web-qa
+          image: us.gcr.io/propane-net-275411/sws_web:0.1.0qa
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+
+  volumeClaimTemplates:
+    - metadata:
+        name: db-pvc
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+
+    - metadata:
+        name: api-pvc
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 100Gi

@@ -1,7 +1,7 @@
 const config = {
   mysql: {
     connectionLimit: 10,
-    host: 'localhost',
+    host: 'mariadb',
     user: 'root',
     password: '',
     database: 'sws'
